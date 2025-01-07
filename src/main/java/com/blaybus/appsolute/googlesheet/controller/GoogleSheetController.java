@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 
+//예시입니다.
 @RestController
 @RequiredArgsConstructor
 public class GoogleSheetController {
