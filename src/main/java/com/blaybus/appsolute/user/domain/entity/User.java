@@ -34,8 +34,11 @@ public class User {
     @Column(name = "user_id", unique = true)
     private String userId;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "initial_password")
+    private String initialPassword;
+
+    @Column(name = "changed_password")
+    private String changedPassword;
 
     @ManyToOne
     private DepartmentGroup departmentGroup;
@@ -47,21 +50,26 @@ public class User {
     private Level level;
 
     public void updatePassword(String newPassword) {
-        this.password = newPassword;
+        this.changedPassword = newPassword;
     }
 
     public void updateCharacters(Characters newCharacters) {
         this.characters = newCharacters;
     }
 
+    public void updateLevel(Level level) {
+        this.level = level;
+    }
+
     @Builder
-    public User(Long id, String employeeNumber, String userName, Date joiningDate, String userId, String password, DepartmentGroup departmentGroup, Characters characters, Level level) {
+    public User(Long id, String employeeNumber, String userName, Date joiningDate, String userId, String initialPassword, String changedPassword, DepartmentGroup departmentGroup, Characters characters, Level level) {
         this.id = id;
         this.employeeNumber = employeeNumber;
         this.userName = userName;
         this.joiningDate = joiningDate;
         this.userId = userId;
-        this.password = password;
+        this.initialPassword = initialPassword;
+        this.changedPassword = changedPassword;
         this.departmentGroup = departmentGroup;
         this.characters = characters;
         this.level = level;
