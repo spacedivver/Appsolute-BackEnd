@@ -1,6 +1,5 @@
 package com.blaybus.appsolute.departmentgroup.domain;
 
-import com.blaybus.appsolute.department.domain.entity.Department;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,14 +19,13 @@ public class DepartmentGroup {
     @Column(name = "department_group_name", columnDefinition = "VARCHAR(20)")
     private String departmentGroupName;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
+    @Column(name = "department_name")
+    private String departmentName;
 
     @Builder
-    public DepartmentGroup(Long departmentGroupId, String departmentGroupName, Department department) {
+    public DepartmentGroup(Long departmentGroupId, String departmentGroupName, String departmentName) {
         this.departmentGroupId = departmentGroupId;
         this.departmentGroupName = departmentGroupName;
-        this.department = department;
+        this.departmentName = departmentName;
     }
 }

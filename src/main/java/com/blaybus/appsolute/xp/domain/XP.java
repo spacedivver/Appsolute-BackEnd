@@ -3,6 +3,7 @@ package com.blaybus.appsolute.xp.domain;
 import com.blaybus.appsolute.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,12 @@ public class XP {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public XP(Long xpId, Integer year, Long point, User user) {
+        this.xpId = xpId;
+        this.year = year;
+        this.point = point;
+        this.user = user;
+    }
 }

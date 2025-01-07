@@ -2,6 +2,7 @@ package com.blaybus.appsolute.level.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +22,15 @@ public class Level {
 
     @Column(name = "level_achievement")
     private Long levelAchievement;
+
+    @Column(name = "max_point")
+    private Long maxPoint;
+
+    @Builder
+    public Level(Long levelId, String levelName, Long levelAchievement, Long maxPoint) {
+        this.levelId = levelId;
+        this.levelName = levelName;
+        this.levelAchievement = levelAchievement;
+        this.maxPoint = maxPoint;
+    }
 }
