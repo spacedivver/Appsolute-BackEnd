@@ -22,7 +22,7 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "employee_number", columnDefinition = "VARCHAR(10)")
+    @Column(name = "employee_number", columnDefinition = "VARCHAR(10)", unique = true)
     private String employeeNumber;
 
     @Column(name = "user_name")
@@ -31,7 +31,7 @@ public class User {
     @Column(name = "joining_date")
     private Date joiningDate;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", unique = true)
     private String userId;
 
     @Column(name = "password")
