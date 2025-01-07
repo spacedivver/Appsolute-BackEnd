@@ -4,6 +4,7 @@ import com.blaybus.appsolute.commons.exception.ApplicationException;
 import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
 import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
 import com.blaybus.appsolute.departmentgroup.repository.JpaDepartmentGroupRepository;
+import com.blaybus.appsolute.googlesheet.service.GoogleSheetService;
 import com.blaybus.appsolute.level.domain.entity.Level;
 import com.blaybus.appsolute.level.domain.repository.JpaLevelRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
@@ -22,19 +23,27 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserWebHookService {
+public class UserSheetService {
 
     private final JpaUserRepository userRepository;
     private final JpaDepartmentGroupRepository departmentGroupRepository;
     private final JpaXPRepository xpRepository;
     private final JpaLevelRepository levelRepository;
+    private final GoogleSheetService sheetService;
+
+    private static final String range = "구성원 정보!B10:V";
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    public void syncInitialUserData(List<List<Object>> sheetData) {
+    public void syncInitialUserData() {
+
+        userRepository.deleteAll();
+
+        List<List<Object>> sheetData = sheetService.readSpreadsheet(range);
+
         for(List<Object> row : sheetData) {
 
-            // 에외 처리 (row 값이 없을 때)
+            //row값 없으면 예외처리
 
             DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName((String) row.get(3), (String) row.get(4))
                     .orElseGet( () ->
@@ -48,17 +57,13 @@ public class UserWebHookService {
 
             Long totalXP = Long.parseLong(row.get(6).toString());
 
-            //레벨 자동으로 하려면 엑셀에서 함수로 해야될 거 같음
             if(level.getLevelAchievement() < totalXP && totalXP <= level.getMaxPoint()) {
                 throw new ApplicationException(
                         ErrorStatus.toErrorStatus("해당 레벨이 아닙니다.", 400, LocalDateTime.now())
                 );
             }
 
-            User user = userRepository.findByEmployeeNumber((String)row.get(0))
-                    .orElseGet( () ->
-                            userRepository.save(parseToUser(row, departmentGroup, level)
-                    ));
+            User user = userRepository.save(parseToUser(row, departmentGroup, level));
 
             for (int year = 2023; year >= 2013; year--) {
                 int index = 2023 - year + 11;
@@ -100,7 +105,7 @@ public class UserWebHookService {
                     .build();
         } catch (ParseException e) {
             throw new ApplicationException(
-                    ErrorStatus.toErrorStatus("유저로 변경 중 오류가 발생하였습니다.", 500, LocalDateTime.now())
+                    ErrorStatus.toErrorStatus("date 변경도중 오류가 발생하였습니다.", 500, LocalDateTime.now())
             );
         }
     }

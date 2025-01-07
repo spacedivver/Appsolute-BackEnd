@@ -2,14 +2,18 @@ package com.blaybus.appsolute.user.domain.entity;
 
 import com.blaybus.appsolute.character.domain.entity.Characters;
 import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
+import com.blaybus.appsolute.fcm.domain.FcmToken;
 import com.blaybus.appsolute.level.domain.entity.Level;
+import com.blaybus.appsolute.xp.domain.XP;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,6 +53,16 @@ public class User {
     @ManyToOne
     private Level level;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<XP> xpList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FcmToken> fcmTokenList = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<NotificationLogs> notificationLogs;
+
+
     public void updatePassword(String newPassword) {
         this.changedPassword = newPassword;
     }
@@ -59,6 +73,18 @@ public class User {
 
     public void updateLevel(Level level) {
         this.level = level;
+    }
+
+    public void updateDepartmentGroup(DepartmentGroup departmentGroup) {
+        this.departmentGroup = departmentGroup;
+    }
+
+    public void updateUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void updateEmployeeNumber(String employeeNumber) {
+        this.employeeNumber = employeeNumber;
     }
 
     @Builder
