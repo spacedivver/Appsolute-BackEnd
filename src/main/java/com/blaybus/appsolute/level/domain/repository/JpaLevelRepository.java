@@ -1,0 +1,10 @@
+package com.blaybus.appsolute.level.domain.repository;
+
+import com.blaybus.appsolute.level.domain.entity.Level;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface JpaLevelRepository extends JpaRepository<Level, Long> {
+    Optional<Level> findByLevelName(String levelName);
+}
