@@ -45,12 +45,15 @@ public class User {
     private String changedPassword;
 
     @ManyToOne
+    @JoinColumn(name = "department_group_id")
     private DepartmentGroup departmentGroup;
 
     @ManyToOne
+    @JoinColumn(name = "character_id")
     private Characters characters;
 
     @ManyToOne
+    @JoinColumn(name = "level_id")
     private Level level;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

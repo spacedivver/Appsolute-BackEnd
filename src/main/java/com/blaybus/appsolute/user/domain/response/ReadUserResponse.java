@@ -27,8 +27,9 @@ public record ReadUserResponse(
                 .userId(user.getUserId())
                 .departmentName(user.getDepartmentGroup().getDepartmentName())
                 .departmentGroupName(user.getDepartmentGroup().getDepartmentGroupName())
-                .characterName(user.getCharacters().getCharacterName())
-                .characterImage(user.getCharacters().getCharacterImage())
+                .characterName(user.getCharacters() != null ? user.getCharacters().getCharacterName() : null)
+                .characterImage(user.getCharacters() != null ? user.getCharacters().getCharacterImage() : null)
+                .levelName(user.getLevel().getLevelName())
                 .lastYearXP(lastYearXP)
                 .thisYearXP(thisYearXP)
                 .build();

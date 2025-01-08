@@ -49,7 +49,7 @@ public class UserService {
                         ErrorStatus.toErrorStatus("일치하지 않는 비밀번호입니다.", 404, LocalDateTime.now())
                 ));
 
-        if(user.getChangedPassword() != null) {
+        if(!user.getChangedPassword().isEmpty()) {
             throw new ApplicationException(
                     ErrorStatus.toErrorStatus("일치하지 않는 비밀번호입니다.", 404, LocalDateTime.now())
             );

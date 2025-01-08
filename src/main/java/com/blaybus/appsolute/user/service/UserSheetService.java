@@ -43,8 +43,6 @@ public class UserSheetService {
 
         for(List<Object> row : sheetData) {
 
-            //row값 없으면 예외처리
-
             DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName((String) row.get(3), (String) row.get(4))
                     .orElseGet( () ->
                             departmentGroupRepository.save(parseToDepartmentGroup(row)
@@ -66,7 +64,7 @@ public class UserSheetService {
             User user = userRepository.save(parseToUser(row, departmentGroup, level));
 
             for (int year = 2023; year >= 2013; year--) {
-                int index = 2023 - year + 11;
+                int index = 2023 - year + 10;
 
                 if (row.size() > index && row.get(index) != null) {
                     long xpPoint = Long.parseLong(row.get(index).toString().replace(",", ""));
