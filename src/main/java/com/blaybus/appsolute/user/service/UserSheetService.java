@@ -31,7 +31,7 @@ public class UserSheetService {
     private final JpaLevelRepository levelRepository;
     private final GoogleSheetService sheetService;
 
-    private static final String range = "구성원 정보!B10:V";
+    private static final String range = "구성원 정보!B10:V16";
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -55,9 +55,9 @@ public class UserSheetService {
                                     ErrorStatus.toErrorStatus("존재하지 않는 레벨입니다.", 404, LocalDateTime.now())
                             ));
 
-            Long totalXP = Long.parseLong(row.get(6).toString());
+            Long totalXP = Long.parseLong(row.get(9).toString().replace(",", ""));
 
-            if(level.getLevelAchievement() < totalXP && totalXP <= level.getMaxPoint()) {
+            if(level.getLevelAchievement() > totalXP && totalXP > level.getMaxPoint()) {
                 throw new ApplicationException(
                         ErrorStatus.toErrorStatus("해당 레벨이 아닙니다.", 400, LocalDateTime.now())
                 );
@@ -69,7 +69,7 @@ public class UserSheetService {
                 int index = 2023 - year + 11;
 
                 if (row.size() > index && row.get(index) != null) {
-                    long xpPoint = Long.parseLong(row.get(index).toString());
+                    long xpPoint = Long.parseLong(row.get(index).toString().replace(",", ""));
 
                     XP xp = XP.builder()
                             .user(user)
@@ -81,6 +81,31 @@ public class UserSheetService {
                 }
             }
         }
+    }
+
+    public void updateSpreadsheetPassword(String employeeNumber, String newPassword) {
+
+        List<List<Object>> sheetData = sheetService.readSpreadsheet("구성원 정보!B10:B");
+
+        int rowIndex = -1;
+        for (int i = 0; i < sheetData.size(); i++) {
+            List<Object> row = sheetData.get(i);
+
+            if (!row.isEmpty() && row.getFirst() != null && row.getFirst().toString().equals(employeeNumber)) {
+                rowIndex = i + 10;
+                break;
+            }
+        }
+
+        if (rowIndex == -1) {
+            throw new ApplicationException(
+                    ErrorStatus.toErrorStatus("스프레드 시트에서 데이터를 찾을 수 없습니다.", 404, LocalDateTime.now())
+            );
+        }
+
+        String range = "구성원 정보!J" + rowIndex;
+
+        sheetService.updateSheet(range, newPassword);
     }
 
     private static DepartmentGroup parseToDepartmentGroup(List<Object> row) {

@@ -25,7 +25,7 @@ public record ReadUserResponse(
                 .userName(user.getUserName())
                 .joiningDate(user.getJoiningDate())
                 .userId(user.getUserId())
-                .departmentName(user.getDepartmentGroup().getDepartment().getDepartmentName())
+                .departmentName(user.getDepartmentGroup().getDepartmentName())
                 .departmentGroupName(user.getDepartmentGroup().getDepartmentGroupName())
                 .characterName(user.getCharacters().getCharacterName())
                 .characterImage(user.getCharacters().getCharacterImage())

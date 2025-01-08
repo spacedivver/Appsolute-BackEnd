@@ -30,6 +30,7 @@ public class UserService {
     private final JpaUserRepository userRepository;
     private final JpaXPRepository xpRepository;
     private final JpaCharacterRepository characterRepository;
+    private final UserSheetService userSheetService;
     private final JWTUtil jwtUtil;
 
     public LoginUserResponse login(LoginUserRequest request) {
@@ -97,6 +98,8 @@ public class UserService {
                 ));
 
         user.updatePassword(request.password());
+
+        userSheetService.updateSpreadsheetPassword(user.getEmployeeNumber(), request.password());
     }
 
     public void updateCharacter(Long id, UpdateCharacterRequest request) {
