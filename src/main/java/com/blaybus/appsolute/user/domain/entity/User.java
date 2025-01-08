@@ -2,7 +2,7 @@ package com.blaybus.appsolute.user.domain.entity;
 
 import com.blaybus.appsolute.character.domain.entity.Characters;
 import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
-import com.blaybus.appsolute.fcm.domain.FcmToken;
+import com.blaybus.appsolute.fcm.domain.entity.FcmToken;
 import com.blaybus.appsolute.level.domain.entity.Level;
 import com.blaybus.appsolute.xp.domain.XP;
 import jakarta.persistence.*;
