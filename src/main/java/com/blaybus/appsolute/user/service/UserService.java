@@ -14,7 +14,7 @@ import com.blaybus.appsolute.user.domain.response.ReadUserResponse;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
 import com.blaybus.appsolute.xp.domain.entity.Xp;
 import com.blaybus.appsolute.xp.domain.entity.XpDetail;
-import com.blaybus.appsolute.xp.repository.JpaXPRepository;
+import com.blaybus.appsolute.xp.repository.JpaXpRepository;
 import com.blaybus.appsolute.xp.repository.JpaXpDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ import java.util.Optional;
 public class UserService {
 
     private final JpaUserRepository userRepository;
-    private final JpaXPRepository xpRepository;
+    private final JpaXpRepository xpRepository;
     private final JpaXpDetailRepository xpDetailRepository;
     private final JpaCharacterRepository characterRepository;
     private final UserSheetService userSheetService;
