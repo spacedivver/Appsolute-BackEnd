@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -19,9 +21,6 @@ public class DepartmentGroupQuest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long departmentGroupQuestId;
 
-    @Column(name = "department_quest_name")
-    private String departmentQuestName;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "department_quest_type")
     private QuestType departmentQuestType;
@@ -31,9 +30,6 @@ public class DepartmentGroupQuest {
 
     @Column(name = "medium_threshold")
     private Double mediumThreshold;
-
-    @Column(name = "productivity")
-    private Double productivity;
 
     @Column(name = "quest_stats")
     private QuestStatusType departmentGroupQuestStatus;
@@ -48,17 +44,47 @@ public class DepartmentGroupQuest {
     @JoinColumn(name = "department_group_id")
     private DepartmentGroup departmentGroup;
 
+    @Column(name = "year")
+    private Integer year;
+
+    @Column(name = "month")
+    private Integer month;
+
+    @Column(name = "week")
+    private Integer week;
+
+    @Column(name = "nowXP")
+    private Long nowXP;
+
+    @Column(name = "note")
+    private String note;
+
+    public void updateNowXP(Long nowXP) {
+        this.nowXP = nowXP;
+
+        if(Objects.equals(nowXP, maxPoint)) {
+            departmentGroupQuestStatus = QuestStatusType.MAX_COMPLETE;
+        } else if(Objects.equals(nowXP, mediumPoint)) {
+            departmentGroupQuestStatus = QuestStatusType.MEDIUM_COMPLETE;
+        } else {
+            departmentGroupQuestStatus = QuestStatusType.INCOMPLETE;
+        }
+    }
+
     @Builder
-    public DepartmentGroupQuest(Long departmentGroupQuestId, String departmentQuestName, QuestType departmentQuestType, Double maxThreshold, Double mediumThreshold, Double productivity, QuestStatusType departmentGroupQuestStatus, Long mediumPoint, Long maxPoint, DepartmentGroup departmentGroup) {
+    public DepartmentGroupQuest(Long departmentGroupQuestId, QuestType departmentQuestType, Double maxThreshold, Double mediumThreshold, QuestStatusType departmentGroupQuestStatus, Long mediumPoint, Long maxPoint, DepartmentGroup departmentGroup, Integer year, Integer month, Integer week, Long nowXP, String note) {
         this.departmentGroupQuestId = departmentGroupQuestId;
-        this.departmentQuestName = departmentQuestName;
         this.departmentQuestType = departmentQuestType;
         this.maxThreshold = maxThreshold;
         this.mediumThreshold = mediumThreshold;
-        this.productivity = productivity;
         this.departmentGroupQuestStatus = departmentGroupQuestStatus;
         this.mediumPoint = mediumPoint;
         this.maxPoint = maxPoint;
         this.departmentGroup = departmentGroup;
+        this.year = year;
+        this.month = month;
+        this.week = week;
+        this.nowXP = nowXP;
+        this.note = note;
     }
 }
