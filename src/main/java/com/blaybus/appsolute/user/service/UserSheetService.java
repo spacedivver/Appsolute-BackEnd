@@ -9,8 +9,10 @@ import com.blaybus.appsolute.level.domain.entity.Level;
 import com.blaybus.appsolute.level.domain.repository.JpaLevelRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
-import com.blaybus.appsolute.xp.domain.XP;
+import com.blaybus.appsolute.xp.domain.entity.Xp;
+import com.blaybus.appsolute.xp.domain.entity.XpDetail;
 import com.blaybus.appsolute.xp.repository.JpaXPRepository;
+import com.blaybus.appsolute.xp.repository.JpaXpDetailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class UserSheetService {
     private final JpaXPRepository xpRepository;
     private final JpaLevelRepository levelRepository;
     private final GoogleSheetService sheetService;
+    private final JpaXpDetailRepository xpDetailRepository;
 
     private static final String range = "구성원 정보!B10:V16";
 
@@ -69,13 +72,20 @@ public class UserSheetService {
                 if (row.size() > index && row.get(index) != null) {
                     long xpPoint = Long.parseLong(row.get(index).toString().replace(",", ""));
 
-                    XP xp = XP.builder()
+                    Xp xp = Xp.builder()
                             .user(user)
                             .year(year)
-                            .point(xpPoint)
                             .build();
 
                     xpRepository.save(xp);
+
+                    XpDetail xpDetail = XpDetail.builder()
+                            .point(xpPoint)
+                            .createdAt(LocalDateTime.of(year, 1,1,0, 0))
+                            .xp(xp)
+                            .build();
+
+                    xpDetailRepository.save(xpDetail);
                 }
             }
         }
