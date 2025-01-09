@@ -12,8 +12,10 @@ import com.blaybus.appsolute.user.domain.request.UpdatePasswordRequest;
 import com.blaybus.appsolute.user.domain.response.LoginUserResponse;
 import com.blaybus.appsolute.user.domain.response.ReadUserResponse;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
-import com.blaybus.appsolute.xp.domain.XP;
+import com.blaybus.appsolute.xp.domain.entity.Xp;
+import com.blaybus.appsolute.xp.domain.entity.XpDetail;
 import com.blaybus.appsolute.xp.repository.JpaXPRepository;
+import com.blaybus.appsolute.xp.repository.JpaXpDetailRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,7 @@ public class UserService {
 
     private final JpaUserRepository userRepository;
     private final JpaXPRepository xpRepository;
+    private final JpaXpDetailRepository xpDetailRepository;
     private final JpaCharacterRepository characterRepository;
     private final UserSheetService userSheetService;
     private final JWTUtil jwtUtil;
@@ -71,23 +74,38 @@ public class UserService {
                         ErrorStatus.toErrorStatus("해당하는 회원이 없습니다.", 404, LocalDateTime.now())
                 ));
 
-        List<XP> xpList = xpRepository.findByUser_Id(id);
+        List<Xp> xpList = xpRepository.findByUser_Id(id);
 
-        long lastYearXP = xpList.stream()
-                .mapToLong(XP::getPoint)
-                .sum();
+        long lastYearXpPoint = 0;
 
-        long thisYearXP = 0;
+        List<Xp> lastYearXp = xpList.stream()
+                .filter(xp -> xp.getYear() <= now.getYear() -1)
+                .toList();
 
-        for(XP xp : xpList) {
-            if(xp.getYear() == now.getYear()) {
-                thisYearXP = xp.getPoint();
+        for(Xp xp : lastYearXp) {
+            List<XpDetail> xpDetailList = xpDetailRepository.findByXp(xp);
+
+            for(XpDetail xpDetail : xpDetailList) {
+                lastYearXpPoint += xpDetail.getPoint();
             }
         }
 
-        lastYearXP = lastYearXP - thisYearXP;
+        Xp thisYearXp = xpList.stream()
+                .filter(xp -> xp.getYear() == now.getYear())
+                .findFirst()
+                .orElse(null);
 
-        return ReadUserResponse.from(user, lastYearXP, thisYearXP);
+        long thisYearXpPoint = 0;
+
+        if(thisYearXp != null) {
+            List<XpDetail> xpDetailList = xpDetailRepository.findByXp(thisYearXp);
+
+            for(XpDetail xpDetail : xpDetailList) {
+                thisYearXpPoint += xpDetail.getPoint();
+            }
+        }
+
+        return ReadUserResponse.from(user, lastYearXpPoint, thisYearXpPoint);
     }
 
     public void updatePassword(Long id, UpdatePasswordRequest request) {

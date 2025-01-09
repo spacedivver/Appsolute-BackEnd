@@ -26,11 +26,16 @@ public class Level {
     @Column(name = "max_point")
     private Long maxPoint;
 
+    @OneToOne
+    @JoinColumn(name = "next_level_id")
+    private Level nextLevel;
+
     @Builder
-    public Level(Long levelId, String levelName, Long levelAchievement, Long maxPoint) {
+    public Level(Long levelId, String levelName, Long levelAchievement, Long maxPoint, Level nextLevel) {
         this.levelId = levelId;
         this.levelName = levelName;
         this.levelAchievement = levelAchievement;
         this.maxPoint = maxPoint;
+        this.nextLevel = nextLevel;
     }
 }
