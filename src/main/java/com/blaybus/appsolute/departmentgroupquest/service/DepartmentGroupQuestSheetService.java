@@ -109,7 +109,7 @@ public class DepartmentGroupQuestSheetService {
                 }
             }
         } else {
-            for(int i = 1; i <=12; i++) {
+            for(int i = 0; i <=11; i++) {
                 Double maxThreshold = (Double)values.get(i).get(0);
                 Double midThreshold = (Double)values.get(i).get(1);
                 int month = (Integer)values.get(i).get(2);
