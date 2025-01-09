@@ -5,7 +5,7 @@ import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
 import com.blaybus.appsolute.fcm.domain.entity.FcmToken;
 import com.blaybus.appsolute.fcm.domain.entity.NotificationLogs;
 import com.blaybus.appsolute.level.domain.entity.Level;
-import com.blaybus.appsolute.xp.domain.XP;
+import com.blaybus.appsolute.xp.domain.entity.Xp;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -58,7 +58,7 @@ public class User {
     private Level level;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<XP> xpList = new ArrayList<>();
+    private List<Xp> xpList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FcmToken> fcmTokenList = new ArrayList<>();

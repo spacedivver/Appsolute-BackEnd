@@ -1,4 +1,4 @@
-package com.blaybus.appsolute.xp.domain;
+package com.blaybus.appsolute.xp.domain.entity;
 
 import com.blaybus.appsolute.user.domain.entity.User;
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "XP")
-public class XP {
+public class Xp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,18 +21,14 @@ public class XP {
     @Column(name = "year")
     private Integer year;
 
-    @Column(name = "point")
-    private Long point;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public XP(Long xpId, Integer year, Long point, User user) {
+    public Xp(Long xpId, Integer year, User user) {
         this.xpId = xpId;
         this.year = year;
-        this.point = point;
         this.user = user;
     }
 }
