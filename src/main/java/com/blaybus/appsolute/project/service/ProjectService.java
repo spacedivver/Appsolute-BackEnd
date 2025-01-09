@@ -21,14 +21,12 @@ public class ProjectService {
     private JpaProjectRepository projectRepository;
 
     public void saveProject(Project project, String employeeNumber) {
-        // 사번으로 USER 조회
+
         User user = userRepository.findByEmployeeNumber(employeeNumber)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with employee number: " + employeeNumber));
 
-        // USER ID 설정
         project.setUserId(user.getId());
 
-        // PROJECT 저장
         projectRepository.save(project);
     }
 

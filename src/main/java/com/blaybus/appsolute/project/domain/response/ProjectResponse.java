@@ -12,7 +12,6 @@ public class ProjectResponse {
     private Long grantedPoint;
     private String notes;
 
-    // 엔티티 -> DTO 변환
     public static ProjectResponse fromEntity(Project project) {
         ProjectResponse response = new ProjectResponse();
         response.setProjectId(project.getProjectId());
