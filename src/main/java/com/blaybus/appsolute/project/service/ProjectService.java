@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -29,4 +31,9 @@ public class ProjectService {
         // PROJECT 저장
         projectRepository.save(project);
     }
+
+    public List<Project> getProjectsByUser(Long userId) {
+        return projectRepository.findByUserId(userId);
+    }
+
 }

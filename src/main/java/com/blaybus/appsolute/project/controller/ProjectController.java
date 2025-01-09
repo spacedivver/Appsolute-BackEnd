@@ -6,6 +6,8 @@ import com.blaybus.appsolute.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/project")
@@ -26,4 +28,8 @@ public class ProjectController {
         return "Project saved successfully!";
     }
 
+    @GetMapping("/user/{userId}")
+    public List<Project> getProjectsByUser(@PathVariable Long userId) {
+        return projectService.getProjectsByUser(userId);
+    }
 }
