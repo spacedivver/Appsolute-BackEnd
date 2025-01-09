@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,17 +30,34 @@ public class UserService {
     private final JpaUserRepository userRepository;
     private final JpaXPRepository xpRepository;
     private final JpaCharacterRepository characterRepository;
+    private final UserSheetService userSheetService;
     private final JWTUtil jwtUtil;
 
     public LoginUserResponse login(LoginUserRequest request) {
 
-        User user = userRepository.findByUserIdAndPassword(request.userId(), request.password())
+        Optional<User> userOptional = userRepository.findByUserIdAndChangedPassword(request.userId(), request.password());
+
+        if(userOptional.isPresent()) {
+            return LoginUserResponse.builder()
+                    .jwtToken(jwtUtil.createJwt(userOptional.get().getId()))
+                    .firstLogin(false)
+                    .build();
+        }
+
+        User user = userRepository.findByUserIdAndInitialPassword(request.userId(), request.password())
                 .orElseThrow(() -> new ApplicationException(
-                                ErrorStatus.toErrorStatus("로그인정보가 일치하지 않습니다.", 400, LocalDateTime.now())
-                        ));
+                        ErrorStatus.toErrorStatus("일치하지 않는 비밀번호입니다.", 404, LocalDateTime.now())
+                ));
+
+        if(!user.getChangedPassword().isEmpty()) {
+            throw new ApplicationException(
+                    ErrorStatus.toErrorStatus("일치하지 않는 비밀번호입니다.", 404, LocalDateTime.now())
+            );
+        }
 
         return LoginUserResponse.builder()
                 .jwtToken(jwtUtil.createJwt(user.getId()))
+                .firstLogin(true)
                 .build();
     }
 
@@ -80,6 +98,8 @@ public class UserService {
                 ));
 
         user.updatePassword(request.password());
+
+        userSheetService.updateSpreadsheetPassword(user.getEmployeeNumber(), request.password());
     }
 
     public void updateCharacter(Long id, UpdateCharacterRequest request) {
