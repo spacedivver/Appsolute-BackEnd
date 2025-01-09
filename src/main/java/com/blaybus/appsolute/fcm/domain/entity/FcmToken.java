@@ -1,8 +1,10 @@
-package com.blaybus.appsolute.fcm.domain;
+package com.blaybus.appsolute.fcm.domain.entity;
 
+import com.blaybus.appsolute.fcm.domain.type.DeviceType;
 import com.blaybus.appsolute.user.domain.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +22,18 @@ public class FcmToken {
     @Column(name = "fcm_token_content")
     private String fcmTokenContent;
 
+    @Column(name = "device_type")
+    private DeviceType deviceType;
+
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+
+    @Builder
+    public FcmToken(Long fcmTokenId, String fcmTokenContent, DeviceType deviceType, User user) {
+        this.fcmTokenId = fcmTokenId;
+        this.fcmTokenContent = fcmTokenContent;
+        this.deviceType = deviceType;
+        this.user = user;
+    }
 }

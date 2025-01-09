@@ -44,6 +44,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                                 ErrorStatus.toErrorStatus("재로그인이 필요합니다.", 400, LocalDateTime.now())
                         );
                     }
+
                     request.setAttribute("id", jwtUtil.getId(token));
                 } catch (Exception e) {
                     log.error("Invalid token: " + token, e);

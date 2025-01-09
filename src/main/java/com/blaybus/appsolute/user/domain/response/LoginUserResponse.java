@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record LoginUserResponse(
-        String jwtToken
+        String jwtToken,
+        boolean firstLogin
 ) {
 }
