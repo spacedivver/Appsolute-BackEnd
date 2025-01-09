@@ -11,7 +11,7 @@ import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
 import com.blaybus.appsolute.xp.domain.entity.Xp;
 import com.blaybus.appsolute.xp.domain.entity.XpDetail;
-import com.blaybus.appsolute.xp.repository.JpaXPRepository;
+import com.blaybus.appsolute.xp.repository.JpaXpRepository;
 import com.blaybus.appsolute.xp.repository.JpaXpDetailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,12 @@ public class UserSheetService {
 
     private final JpaUserRepository userRepository;
     private final JpaDepartmentGroupRepository departmentGroupRepository;
-    private final JpaXPRepository xpRepository;
+    private final JpaXpRepository xpRepository;
     private final JpaLevelRepository levelRepository;
     private final GoogleSheetService sheetService;
     private final JpaXpDetailRepository xpDetailRepository;
 
-    private static final String range = "구성원 정보!B10:V16";
+    private static final String range = "구성원 정보!B10:V";
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
