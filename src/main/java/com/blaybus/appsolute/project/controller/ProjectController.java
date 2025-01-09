@@ -2,6 +2,7 @@ package com.blaybus.appsolute.project.controller;
 
 import com.blaybus.appsolute.project.domain.entity.Project;
 import com.blaybus.appsolute.project.domain.request.ProjectRequest;
+import com.blaybus.appsolute.project.domain.response.ProjectResponse;
 import com.blaybus.appsolute.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ProjectController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Project> getProjectsByUser(@PathVariable Long userId) {
+    public List<ProjectResponse> getProjectsByUser(@PathVariable Long userId) {
         return projectService.getProjectsByUser(userId);
     }
 }
