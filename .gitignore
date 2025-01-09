@@ -37,3 +37,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+blaybus-appsolute-firebase-adminsdk.json
+
+google-account-key.json
