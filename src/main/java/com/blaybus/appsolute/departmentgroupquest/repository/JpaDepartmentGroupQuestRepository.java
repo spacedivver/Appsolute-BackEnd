@@ -12,4 +12,5 @@ public interface JpaDepartmentGroupQuestRepository extends JpaRepository<Departm
     Optional<DepartmentGroupQuest> findByDepartmentGroupAndYearAndWeek(DepartmentGroup departmentGroup, Integer year, Integer week);
     List<DepartmentGroupQuest> findByDepartmentGroupAndYear(DepartmentGroup departmentGroup, Integer year);
     void deleteByDepartmentGroupAndYear(DepartmentGroup departmentGroup, Integer year);
+    List<DepartmentGroupQuest> findByDepartmentGroup(DepartmentGroup departmentGroup);
 }

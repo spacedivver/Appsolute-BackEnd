@@ -10,6 +10,9 @@ import com.blaybus.appsolute.evaluation.domain.type.GradeType;
 import com.blaybus.appsolute.evaluation.domain.type.PeriodType;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationGradeRepository;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationRepository;
+import com.blaybus.appsolute.fcm.domain.response.ReadFcmTokenResponse;
+import com.blaybus.appsolute.fcm.service.FcmTokenService;
+import com.blaybus.appsolute.fcm.service.MessageService;
 import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -26,6 +30,8 @@ public class EvaluationService {
     private final JpaEvaluationRepository evaluationRepository;
     private final JpaEvaluationGradeRepository evaluationGradeRepository;
     private final JpaUserRepository userRepository;
+    private final MessageService messageService;
+    private final FcmTokenService tokenService;
 
     public void createOrUpdateEvaluation(CreateEvaluationRequest request) {
         Integer year = LocalDateTime.now().getYear();
@@ -52,6 +58,13 @@ public class EvaluationService {
                                 .build()));
 
         evaluation.updateEvaluationGrade(evaluationGrade);
+
+        List<ReadFcmTokenResponse> tokenList = tokenService.getFcmTokens(user.getId());
+
+        for(ReadFcmTokenResponse token : tokenList) {
+            messageService.sendMessageTo(user, token.fcmToken(), "경험치를 획득하였습니다.",
+                    "인사평가로 " + evaluation.getEvaluationGrade().getEvaluationGradePoint() + "경험치를 획득하였습니다", null);
+        }
     }
 
     public void deleteEvaluation(DeleteEvaluationRequest request) {

@@ -7,6 +7,9 @@ import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
 import com.blaybus.appsolute.commons.jwt.JWTUtil;
 import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
 import com.blaybus.appsolute.departmentgroup.repository.JpaDepartmentGroupRepository;
+import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentGroupQuest;
+import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestStatusType;
+import com.blaybus.appsolute.departmentgroupquest.repository.JpaDepartmentGroupQuestRepository;
 import com.blaybus.appsolute.evaluation.domain.entity.Evaluation;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationRepository;
 import com.blaybus.appsolute.level.domain.entity.Level;
@@ -43,6 +46,7 @@ public class UserService {
     private final JpaEvaluationRepository evaluationRepository;
     private final JpaDepartmentGroupRepository departmentGroupRepository;
     private final JpaLevelRepository levelRepository;
+    private final JpaDepartmentGroupQuestRepository departmentGroupQuestRepository;
     private final UserSheetService userSheetService;
     private final JWTUtil jwtUtil;
 
@@ -89,6 +93,7 @@ public class UserService {
 
         List<Xp> xpList = xpRepository.findByUser_Id(id);
         List<Evaluation> evaluationList = evaluationRepository.findByUser(user);
+        List<DepartmentGroupQuest> departmentGroupQuestList = departmentGroupQuestRepository.findByDepartmentGroup(user.getDepartmentGroup());
 
         long lastYearXpPoint = 0;
 
@@ -98,6 +103,10 @@ public class UserService {
 
         List<Evaluation> lastYearEvaluation = evaluationList.stream()
                 .filter(evaluation -> evaluation.getYear() <= now.getYear() -1)
+                .toList();
+
+        List<DepartmentGroupQuest> lastYearDepartmentGroupQuest = departmentGroupQuestList.stream()
+                .filter(departmentGroupQuest -> departmentGroupQuest.getYear() <= now.getYear() -1)
                 .toList();
 
         for(Xp xp : lastYearXp) {
@@ -112,6 +121,13 @@ public class UserService {
             lastYearXpPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
         }
 
+        for(DepartmentGroupQuest lastDepartmentGroupQuest : lastYearDepartmentGroupQuest) {
+            if(lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
+                lastYearXpPoint += lastDepartmentGroupQuest.getMediumPoint();
+            } else if (lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
+                lastYearXpPoint += lastDepartmentGroupQuest.getMaxPoint();
+            }
+        }
 
         Xp thisYearXp = xpList.stream()
                 .filter(xp -> xp.getYear() == now.getYear())
@@ -120,6 +136,10 @@ public class UserService {
 
         List<Evaluation> thisYearEvaluation = evaluationList.stream()
                 .filter(evaluation -> evaluation.getYear() == now.getYear())
+                .toList();
+
+        List<DepartmentGroupQuest> thisYearDepartmentGroupQuest = departmentGroupQuestList.stream()
+                .filter(departmentGroupQuest -> departmentGroupQuest.getYear() == now.getYear())
                 .toList();
 
         long thisYearXpPoint = 0;
@@ -134,6 +154,14 @@ public class UserService {
 
         for(Evaluation evaluation : thisYearEvaluation) {
             thisYearXpPoint += evaluation.getEvaluationGrade().getEvaluationGradePoint();
+        }
+
+        for(DepartmentGroupQuest thisDepartmentGroupQuest : thisYearDepartmentGroupQuest) {
+            if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
+                lastYearXpPoint += thisDepartmentGroupQuest.getMediumPoint();
+            } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
+                lastYearXpPoint += thisDepartmentGroupQuest.getMaxPoint();
+            }
         }
 
         long nextLevelRemainXP = Math.max(user.getLevel().getMaxPoint() - (lastYearXpPoint + thisYearXpPoint), 0);
@@ -233,6 +261,7 @@ public class UserService {
         for(User user : userList) {
             List<Xp> xpList = xpRepository.findByUser_Id(user.getId());
             List<Evaluation> evaluationList = evaluationRepository.findByUser(user);
+            List<DepartmentGroupQuest> departmentGroupQuestList = departmentGroupQuestRepository.findByDepartmentGroup(user.getDepartmentGroup());
             Level level = user.getLevel();
 
             long lastYearXpPoint = 0;
@@ -255,6 +284,14 @@ public class UserService {
 
             for(Evaluation lastEvaluation : lastYearEvaluation) {
                 lastYearXpPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
+            }
+
+            for(DepartmentGroupQuest thisDepartmentGroupQuest : departmentGroupQuestList) {
+                if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
+                    lastYearXpPoint += thisDepartmentGroupQuest.getMediumPoint();
+                } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
+                    lastYearXpPoint += thisDepartmentGroupQuest.getMaxPoint();
+                }
             }
 
             while(lastYearXpPoint < level.getMaxPoint()) {
