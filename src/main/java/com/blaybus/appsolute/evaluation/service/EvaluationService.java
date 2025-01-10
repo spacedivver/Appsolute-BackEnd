@@ -7,6 +7,7 @@ import com.blaybus.appsolute.evaluation.domain.entity.EvaluationGrade;
 import com.blaybus.appsolute.evaluation.domain.request.CreateEvaluationRequest;
 import com.blaybus.appsolute.evaluation.domain.request.DeleteEvaluationRequest;
 import com.blaybus.appsolute.evaluation.domain.type.GradeType;
+import com.blaybus.appsolute.evaluation.domain.type.PeriodType;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationGradeRepository;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
@@ -30,6 +31,7 @@ public class EvaluationService {
         Integer year = LocalDateTime.now().getYear();
         GradeType gradeType = GradeType.valueOf(request.grade().replace("등급", ""));
         String employeeNumber = request.employeeNumber();
+        PeriodType period = PeriodType.valueOf(request.period());
 
         User user = userRepository.findByEmployeeNumber(employeeNumber)
                 .orElseThrow(() -> new ApplicationException(
@@ -45,6 +47,7 @@ public class EvaluationService {
                         .orElseGet(() -> evaluationRepository.save(Evaluation.builder()
                                 .year(year)
                                 .user(user)
+                                .periodType(period)
                                 .evaluationGrade(evaluationGrade)
                                 .build()));
 
