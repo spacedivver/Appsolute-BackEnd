@@ -5,6 +5,8 @@ import com.blaybus.appsolute.character.repository.JpaCharacterRepository;
 import com.blaybus.appsolute.commons.exception.ApplicationException;
 import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
 import com.blaybus.appsolute.commons.jwt.JWTUtil;
+import com.blaybus.appsolute.evaluation.domain.entity.Evaluation;
+import com.blaybus.appsolute.evaluation.repository.JpaEvaluationRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.domain.request.LoginUserRequest;
 import com.blaybus.appsolute.user.domain.request.UpdateCharacterRequest;
@@ -33,6 +35,7 @@ public class UserService {
     private final JpaXpRepository xpRepository;
     private final JpaXpDetailRepository xpDetailRepository;
     private final JpaCharacterRepository characterRepository;
+    private final JpaEvaluationRepository evaluationRepository;
     private final UserSheetService userSheetService;
     private final JWTUtil jwtUtil;
 
@@ -75,11 +78,16 @@ public class UserService {
                 ));
 
         List<Xp> xpList = xpRepository.findByUser_Id(id);
+        List<Evaluation> evaluationList = evaluationRepository.findByUser(user);
 
         long lastYearXpPoint = 0;
 
         List<Xp> lastYearXp = xpList.stream()
                 .filter(xp -> xp.getYear() <= now.getYear() -1)
+                .toList();
+
+        List<Evaluation> lastYearEvaluation = evaluationList.stream()
+                .filter(evaluation -> evaluation.getYear() <= now.getYear() -1)
                 .toList();
 
         for(Xp xp : lastYearXp) {
@@ -90,10 +98,19 @@ public class UserService {
             }
         }
 
+        for(Evaluation lastEvaluation : lastYearEvaluation) {
+            lastYearXpPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
+        }
+
+
         Xp thisYearXp = xpList.stream()
                 .filter(xp -> xp.getYear() == now.getYear())
                 .findFirst()
                 .orElse(null);
+
+        List<Evaluation> thisYearEvaluation = evaluationList.stream()
+                .filter(evaluation -> evaluation.getYear() == now.getYear())
+                .toList();
 
         long thisYearXpPoint = 0;
 
@@ -103,6 +120,10 @@ public class UserService {
             for(XpDetail xpDetail : xpDetailList) {
                 thisYearXpPoint += xpDetail.getPoint();
             }
+        }
+
+        for(Evaluation evaluation : thisYearEvaluation) {
+            thisYearXpPoint += evaluation.getEvaluationGrade().getEvaluationGradePoint();
         }
 
         return ReadUserResponse.from(user, lastYearXpPoint, thisYearXpPoint);
