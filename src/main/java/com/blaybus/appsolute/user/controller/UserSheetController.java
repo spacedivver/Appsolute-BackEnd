@@ -18,9 +18,4 @@ public class UserSheetController {
         userSheetService.syncInitialUserData();
         return ResponseEntity.noContent().build();
     }
-
-    @PostMapping("/user/webhook")
-    public ResponseEntity<Void> webhookUserSheet() {
-        return ResponseEntity.noContent().build();
-    }
 }

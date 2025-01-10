@@ -18,14 +18,6 @@ public class DepartmentQuestSheetController {
 
     private final DepartmentGroupQuestSheetService departmentGroupQuestSheetService;
 
-    private final DepartmentGroupQuestService departmentGroupQuestService;
-
-    @PutMapping
-    public ResponseEntity<Void> updateDepartmentQuest(UpdateDepartmentGroupQuestRequest request) {
-        departmentGroupQuestService.updateXP(request);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/sync")
     public ResponseEntity<Void> syncSheet() {
         departmentGroupQuestSheetService.syncGroupQuestSheet();

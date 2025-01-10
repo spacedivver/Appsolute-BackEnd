@@ -1,9 +1,7 @@
 package com.blaybus.appsolute.user.controller;
 
 import com.blaybus.appsolute.commons.annotation.Authenticated;
-import com.blaybus.appsolute.user.domain.request.LoginUserRequest;
-import com.blaybus.appsolute.user.domain.request.UpdateCharacterRequest;
-import com.blaybus.appsolute.user.domain.request.UpdatePasswordRequest;
+import com.blaybus.appsolute.user.domain.request.*;
 import com.blaybus.appsolute.user.domain.response.LoginUserResponse;
 import com.blaybus.appsolute.user.domain.response.ReadUserResponse;
 import com.blaybus.appsolute.user.service.UserService;
@@ -74,6 +72,18 @@ public class UserController {
     @PutMapping("/character")
     public ResponseEntity<Void> changeCharacter(HttpServletRequest req, @RequestBody UpdateCharacterRequest request) {
         userService.updateCharacter(Long.parseLong(req.getAttribute("id").toString()), request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/sheet-create-update")
+    public ResponseEntity<Void> createOrUpdateUser(CreateUserRequest request) {
+        userService.createOrUpdateUser(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/sheet-delete")
+    public ResponseEntity<Void> deleteUser(DeleteUserRequest request) {
+        userService.deleteUser(request);
         return ResponseEntity.ok().build();
     }
 }

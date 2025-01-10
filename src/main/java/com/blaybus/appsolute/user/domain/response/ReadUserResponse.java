@@ -17,9 +17,10 @@ public record ReadUserResponse(
         String characterImage,
         String levelName,
         Long lastYearXP,
-        Long thisYearXP
+        Long thisYearXP,
+        Long nextLevelRemainXP
 ) {
-    public static ReadUserResponse from(User user, Long lastYearXP, Long thisYearXP) {
+    public static ReadUserResponse from(User user, Long lastYearXP, Long thisYearXP, Long nextLevelRemainXP) {
         return ReadUserResponse.builder()
                 .employeeNumber(user.getEmployeeNumber())
                 .userName(user.getUserName())
@@ -32,6 +33,7 @@ public record ReadUserResponse(
                 .levelName(user.getLevel().getLevelName())
                 .lastYearXP(lastYearXP)
                 .thisYearXP(thisYearXP)
+                .nextLevelRemainXP(nextLevelRemainXP)
                 .build();
     }
 }

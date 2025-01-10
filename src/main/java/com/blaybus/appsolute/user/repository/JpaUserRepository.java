@@ -12,4 +12,5 @@ public interface JpaUserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmployeeNumber(String employeeNumber);
     Optional<User> findByUserIdAndInitialPassword(String userId, String initialPassword);
     List<User> findByDepartmentGroup(DepartmentGroup departmentGroup);
+    void deleteByEmployeeNumber(String employeeNumber);
 }

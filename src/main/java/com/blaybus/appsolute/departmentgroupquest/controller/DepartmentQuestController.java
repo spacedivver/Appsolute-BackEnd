@@ -1,14 +1,13 @@
 package com.blaybus.appsolute.departmentgroupquest.controller;
 
 import com.blaybus.appsolute.commons.annotation.Authenticated;
+import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartmentGroupQuestRequest;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentGroupQuestResponse;
 import com.blaybus.appsolute.departmentgroupquest.service.DepartmentGroupQuestService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -25,4 +24,9 @@ public class DepartmentQuestController {
         return ResponseEntity.ok(departmentGroupQuestService.getDepartmentGroupQuest(Long.parseLong(req.getAttribute("id").toString()), date));
     }
 
+    @PutMapping
+    public ResponseEntity<Void> updateDepartmentQuest(UpdateDepartmentGroupQuestRequest request) {
+        departmentGroupQuestService.updateXP(request);
+        return ResponseEntity.ok().build();
+    }
 }

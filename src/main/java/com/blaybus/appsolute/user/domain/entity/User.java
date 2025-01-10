@@ -90,6 +90,18 @@ public class User {
         this.employeeNumber = employeeNumber;
     }
 
+    public void updateInitialPassword(String initialPassword) {
+        this.initialPassword = initialPassword;
+    }
+
+    public void updateJoiningDate(Date joiningDate) {
+        this.joiningDate = joiningDate;
+    }
+
+    public void updateUserId(String userId) {
+        this.userId = userId;
+    }
+
     @Builder
     public User(Long id, String employeeNumber, String userName, Date joiningDate, String userId, String initialPassword, String changedPassword, DepartmentGroup departmentGroup, Characters characters, Level level) {
         this.id = id;
