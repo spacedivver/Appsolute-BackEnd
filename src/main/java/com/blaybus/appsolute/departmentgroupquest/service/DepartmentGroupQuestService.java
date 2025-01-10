@@ -9,6 +9,9 @@ import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartmen
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentGroupQuestResponse;
 import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestType;
 import com.blaybus.appsolute.departmentgroupquest.repository.JpaDepartmentGroupQuestRepository;
+import com.blaybus.appsolute.fcm.domain.response.ReadFcmTokenResponse;
+import com.blaybus.appsolute.fcm.service.FcmTokenService;
+import com.blaybus.appsolute.fcm.service.MessageService;
 import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
@@ -28,6 +31,8 @@ public class DepartmentGroupQuestService {
     private final JpaDepartmentGroupQuestRepository departmentGroupQuestRepository;
     private final JpaDepartmentGroupRepository departmentGroupRepository;
     private final JpaUserRepository userRepository;
+    private final FcmTokenService tokenService;
+    private final MessageService messageService;
 
     public void updateXP(UpdateDepartmentGroupQuestRequest request) {
         DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName(request.department(), request.departmentGroup())
@@ -50,6 +55,17 @@ public class DepartmentGroupQuestService {
         }
 
         departmentGroupQuest.updateNowXP(request.xp());
+
+        List<User> userList = userRepository.findByDepartmentGroup(departmentGroup);
+
+        for(User user : userList) {
+            List<ReadFcmTokenResponse> tokenList = tokenService.getFcmTokens(user.getId());
+
+            for(ReadFcmTokenResponse token : tokenList) {
+                messageService.sendMessageTo(user, token.fcmToken(), "경험치 획득!",
+                        "직무별 퀘스트로 " + request.xp() + "경험치를 획득하였습니다.", null);
+            }
+        }
     }
 
     public ReadDepartmentGroupQuestResponse getDepartmentGroupQuest(Long userId, LocalDateTime date) {
