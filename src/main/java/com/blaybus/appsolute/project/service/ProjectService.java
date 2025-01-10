@@ -1,6 +1,7 @@
 package com.blaybus.appsolute.project.service;
 
 import com.blaybus.appsolute.project.domain.entity.Project;
+import com.blaybus.appsolute.project.domain.request.ProjectRequest;
 import com.blaybus.appsolute.project.domain.response.ProjectResponse;
 import com.blaybus.appsolute.project.repository.JpaProjectRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
@@ -22,11 +23,17 @@ public class ProjectService {
 
     private JpaProjectRepository projectRepository;
 
-    public void saveProject(Project project, String employeeNumber) {
+    public void saveProject(ProjectRequest projectRequest) {
 
-        User user = userRepository.findByEmployeeNumber(employeeNumber)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        User user = userRepository.findByEmployeeNumber(projectRequest.getEmployeeNumber())
+                .orElseThrow(() -> new IllegalArgumentException("해당 사옹자가 없습니다."));
 
+        Project project = new Project();
+        project.setMonth(projectRequest.getMonth());
+        project.setDay(projectRequest.getDay());
+        project.setProjectName(projectRequest.getProjectName());
+        project.setGrantedPoint(projectRequest.getGrantedPoint());
+        project.setNotes(projectRequest.getNotes());
         project.setUserId(user.getId());
 
         projectRepository.save(project);
