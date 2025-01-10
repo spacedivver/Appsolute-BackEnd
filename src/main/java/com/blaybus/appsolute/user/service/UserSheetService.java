@@ -6,7 +6,7 @@ import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
 import com.blaybus.appsolute.departmentgroup.repository.JpaDepartmentGroupRepository;
 import com.blaybus.appsolute.googlesheet.service.GoogleSheetService;
 import com.blaybus.appsolute.level.domain.entity.Level;
-import com.blaybus.appsolute.level.domain.repository.JpaLevelRepository;
+import com.blaybus.appsolute.level.repository.JpaLevelRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
 import com.blaybus.appsolute.xp.domain.entity.Xp;
