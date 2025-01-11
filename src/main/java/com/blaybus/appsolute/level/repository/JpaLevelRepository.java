@@ -1,4 +1,4 @@
-package com.blaybus.appsolute.level.domain.repository;
+package com.blaybus.appsolute.level.repository;
 
 import com.blaybus.appsolute.level.domain.entity.Level;
 import org.springframework.data.jpa.repository.JpaRepository;

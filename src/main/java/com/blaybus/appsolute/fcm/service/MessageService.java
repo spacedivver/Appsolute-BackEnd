@@ -15,6 +15,8 @@ import okhttp3.*;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -24,6 +26,7 @@ import java.util.Arrays;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@EnableAsync
 public class MessageService {
 
     private final ObjectMapper objectMapper;
@@ -44,6 +47,7 @@ public class MessageService {
         return googleCredentials.getAccessToken().getTokenValue();
     }
 
+    @Async
     public Boolean sendMessageTo(User user, String targetToken, String title, String body, String image) {
 
         String message = makeMessage(targetToken, title, body, image);

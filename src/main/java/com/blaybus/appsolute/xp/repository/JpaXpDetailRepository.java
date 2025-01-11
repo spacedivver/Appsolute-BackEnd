@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface JpaXpDetailRepository extends JpaRepository<XpDetail, Long> {
     List<XpDetail> findByXp(Xp xp);
+    void deleteByXp(Xp xp);
 }
