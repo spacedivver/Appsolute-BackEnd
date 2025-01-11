@@ -13,6 +13,7 @@ public record UpdateDepartmentGroupQuestRequest(
         int year,
         int period,
         Long xp,
-        String notes
+        String notes,
+        Double productivity
 ) {
 }
