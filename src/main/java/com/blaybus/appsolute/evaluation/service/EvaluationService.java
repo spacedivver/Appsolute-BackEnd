@@ -38,6 +38,7 @@ public class EvaluationService {
         GradeType gradeType = GradeType.valueOf(request.grade().replace("등급", ""));
         String employeeNumber = request.employeeNumber();
         PeriodType period = PeriodType.valueOf(request.period());
+        String notes = request.notes();
 
         User user = userRepository.findByEmployeeNumber(employeeNumber)
                 .orElseThrow(() -> new ApplicationException(
@@ -55,6 +56,7 @@ public class EvaluationService {
                                 .user(user)
                                 .periodType(period)
                                 .evaluationGrade(evaluationGrade)
+                                .notes(notes)
                                 .build()));
 
         evaluation.updateEvaluationGrade(evaluationGrade);
@@ -74,6 +76,6 @@ public class EvaluationService {
                                 ErrorStatus.toErrorStatus("해당하는 사용자가 없습니다.", 404, LocalDateTime.now())
                         ));
 
-        evaluationRepository.deleteByUserAndYear(user, LocalDateTime.now().getYear());
+        evaluationRepository.deleteByUserAndYearAndPeriodType(user, LocalDateTime.now().getYear(), request.period());
     }
 }
