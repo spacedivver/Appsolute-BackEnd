@@ -85,28 +85,28 @@ public class DepartmentGroupQuestSheetService {
 
                 WeekFields weekFields = WeekFields.of(Locale.KOREA);
 
-                LocalDate endOfWeek = firstDayOfYear
-                        .with(weekFields.weekOfYear(), week)
-                        .with(weekFields.dayOfWeek(), 7);
+//                LocalDate endOfWeek = firstDayOfYear
+//                        .with(weekFields.weekOfYear(), week)
+//                        .with(weekFields.dayOfWeek(), 7);
 
-                for(User user : userList) {
-
-                    Xp xp = xpRepository.findByUserAndYear(user, year)
-                            .orElseGet(() -> xpRepository.save(
-                                    Xp.builder()
-                                            .year(year)
-                                            .user(user)
-                                            .build()
-                            ));
-
-                    XpDetail xpDetail = XpDetail.builder()
-                            .point(point)
-                            .createdAt(endOfWeek.atStartOfDay())
-                            .xp(xp)
-                            .build();
-
-                    xpDetailRepository.save(xpDetail);
-                }
+//                for(User user : userList) {
+//
+//                    Xp xp = xpRepository.findByUserAndYear(user, year)
+//                            .orElseGet(() -> xpRepository.save(
+//                                    Xp.builder()
+//                                            .year(year)
+//                                            .user(user)
+//                                            .build()
+//                            ));
+//
+//                    XpDetail xpDetail = XpDetail.builder()
+//                            .point(point)
+//                            .createdAt(endOfWeek.atStartOfDay())
+//                            .xp(xp)
+//                            .build();
+//
+//                    xpDetailRepository.save(xpDetail);
+//                }
             }
         } else {
             for(int i = 0; i <=11; i++) {
