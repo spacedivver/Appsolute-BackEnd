@@ -55,7 +55,7 @@ jobs:
 
       # 7. Docker 이미지 빌드
       - name: Docker image build
-        run: docker build -t ${{ secrets.HARBOR_USERNAME }}/appsolute .
+        run: docker build -t ${{ secrets.HARBOR_URL }}/${{ secrets.HARBOR_PROJECT }}/appsolute:latest .
 
       # 8. Harbor 로그인
       - name: Harbor login
@@ -67,4 +67,4 @@ jobs:
 
       # 9. Harbor에 Docker 이미지 푸시
       - name: Push Docker image to Harbor
-        run: docker push ${{ secrets.HARBOR_URL }}/${{ secrets.HARBOR_USERNAME }}/appsolute
+        run: docker push ${{ secrets.HARBOR_URL }}/${{ secrets.HARBOR_PROJECT }}/appsolute:latest

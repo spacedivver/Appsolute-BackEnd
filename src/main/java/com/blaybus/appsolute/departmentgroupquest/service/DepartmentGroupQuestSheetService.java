@@ -31,8 +31,6 @@ public class DepartmentGroupQuestSheetService {
 
     private final JpaDepartmentGroupQuestRepository departmentGroupQuestRepository;
     private final JpaDepartmentGroupRepository departmentGroupRepository;
-    private final JpaXpDetailRepository xpDetailRepository;
-    private final JpaXpRepository xpRepository;
     private final JpaUserRepository userRepository;
     private final GoogleSheetService sheetService;
 
@@ -72,18 +70,18 @@ public class DepartmentGroupQuestSheetService {
 
                 QuestStatusType status;
                 if(point == maxPoint) {
-                    status = QuestStatusType.MAX_COMPLETE;
+                    status = QuestStatusType.COMPLETED;
                 } else if (point == midPoint) {
-                    status = QuestStatusType.MEDIUM_COMPLETE;
+                    status = QuestStatusType.ONGOING;
                 } else {
-                    status = QuestStatusType.INCOMPLETE;
+                    status = QuestStatusType.READY;
                 }
 
                 departmentGroupQuestRepository.save(getDepartmentGroupQuestWeekly(questType, maxThreshold, midThreshold, midPoint, maxPoint, departmentGroup, year, week, point, status));
 
-                LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
-
-                WeekFields weekFields = WeekFields.of(Locale.KOREA);
+//                LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
+//
+//                WeekFields weekFields = WeekFields.of(Locale.KOREA);
 
 //                LocalDate endOfWeek = firstDayOfYear
 //                        .with(weekFields.weekOfYear(), week)
@@ -117,11 +115,11 @@ public class DepartmentGroupQuestSheetService {
 
                 QuestStatusType status;
                 if(xp == maxPoint) {
-                    status = QuestStatusType.MAX_COMPLETE;
+                    status = QuestStatusType.COMPLETED;
                 } else if (xp == midPoint) {
-                    status = QuestStatusType.MEDIUM_COMPLETE;
+                    status = QuestStatusType.ONGOING;
                 } else {
-                    status = QuestStatusType.INCOMPLETE;
+                    status = QuestStatusType.READY;
                 }
 
                 departmentGroupQuestRepository.save(getDepartmentGroupQuestMonthly(questType, maxThreshold, midThreshold, midPoint, maxPoint, departmentGroup, year, month, xp, status));
