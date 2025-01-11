@@ -7,6 +7,7 @@ import com.blaybus.appsolute.departmentgroup.repository.JpaDepartmentGroupReposi
 import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentGroupQuest;
 import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartmentGroupQuestRequest;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentGroupQuestResponse;
+import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestStatusType;
 import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestType;
 import com.blaybus.appsolute.departmentgroupquest.repository.JpaDepartmentGroupQuestRepository;
 import com.blaybus.appsolute.fcm.domain.response.ReadFcmTokenResponse;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -34,24 +36,60 @@ public class DepartmentGroupQuestService {
     private final FcmTokenService tokenService;
     private final MessageService messageService;
 
-    public void updateXP(UpdateDepartmentGroupQuestRequest request) {
+    public void createOrUpdateXP(UpdateDepartmentGroupQuestRequest request) {
         DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName(request.department(), request.departmentGroup())
                 .orElseThrow(() -> new ApplicationException(
                         ErrorStatus.toErrorStatus("해당하는 소속, 그룹이 없습니다.", 404, LocalDateTime.now())
                 ));
 
         DepartmentGroupQuest departmentGroupQuest;
+        QuestStatusType questStatus;
+
+        if(Objects.equals(request.xp(), request.maxPoint())) {
+            questStatus = QuestStatusType.MAX_COMPLETE;
+        } else if (Objects.equals(request.xp(), request.mediumPoint())) {
+            questStatus = QuestStatusType.MEDIUM_COMPLETE;
+        } else {
+            questStatus = QuestStatusType.INCOMPLETE;
+        }
 
         if(request.questType() == QuestType.MONTHLY) {
             departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndMonth(departmentGroup, request.year(), request.period())
-                    .orElseThrow(() -> new ApplicationException(
-                            ErrorStatus.toErrorStatus("해당하는 퀘스트가 없습니다.", 404, LocalDateTime.now())
-                    ));
+                    .orElseGet(
+                            () -> departmentGroupQuestRepository.save(
+                                    DepartmentGroupQuest.builder()
+                                            .departmentQuestType(QuestType.MONTHLY)
+                                            .maxThreshold(request.maxThreshold())
+                                            .mediumThreshold(request.mediumThreshold())
+                                            .departmentGroupQuestStatus(questStatus)
+                                            .mediumPoint(request.mediumPoint())
+                                            .maxPoint(request.maxPoint())
+                                            .departmentGroup(departmentGroup)
+                                            .year(request.year())
+                                            .month(request.period())
+                                            .nowXP(request.xp())
+                                            .note(request.notes())
+                                            .build()
+                            )
+                    );
         } else {
             departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndWeek(departmentGroup, request.year(), request.period())
-                    .orElseThrow(() -> new ApplicationException(
-                            ErrorStatus.toErrorStatus("해당하는 퀘스트가 없습니다.", 404, LocalDateTime.now())
-                    ));
+                    .orElseGet(() -> departmentGroupQuestRepository.save(
+                            DepartmentGroupQuest.builder()
+                                    .departmentQuestType(QuestType.MONTHLY)
+                                    .maxThreshold(request.maxThreshold())
+                                    .mediumThreshold(request.mediumThreshold())
+                                    .departmentGroupQuestStatus(questStatus)
+                                    .mediumPoint(request.mediumPoint())
+                                    .maxPoint(request.maxPoint())
+                                    .departmentGroup(departmentGroup)
+                                    .year(request.year())
+                                    .week(request.period())
+                                    .nowXP(request.xp())
+                                    .note(request.notes())
+                                    .build()
+                            )
+                    );
         }
 
         departmentGroupQuest.updateNowXP(request.xp());

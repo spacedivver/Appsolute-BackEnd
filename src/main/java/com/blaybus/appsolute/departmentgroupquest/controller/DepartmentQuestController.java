@@ -44,8 +44,8 @@ public class DepartmentQuestController {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     @PutMapping
-    public ResponseEntity<Void> updateDepartmentQuest(UpdateDepartmentGroupQuestRequest request) {
-        departmentGroupQuestService.updateXP(request);
+    public ResponseEntity<Void> createOrUpdateDepartmentQuest(UpdateDepartmentGroupQuestRequest request) {
+        departmentGroupQuestService.createOrUpdateXP(request);
         return ResponseEntity.ok().build();
     }
 }

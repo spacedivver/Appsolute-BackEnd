@@ -6,8 +6,13 @@ public record UpdateDepartmentGroupQuestRequest(
         String department,
         String departmentGroup,
         QuestType questType,
+        Double maxThreshold,
+        Double mediumThreshold,
+        Long maxPoint,
+        Long mediumPoint,
         int year,
         int period,
-        Long xp
+        Long xp,
+        String notes
 ) {
 }

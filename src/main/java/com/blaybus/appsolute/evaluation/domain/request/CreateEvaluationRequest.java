@@ -4,6 +4,7 @@ public record CreateEvaluationRequest(
         String employeeNumber,
         String employeeName,
         String grade,
-        String period
+        String period,
+        String notes
 ) {
 }
