@@ -17,9 +17,11 @@ import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
@@ -46,11 +48,11 @@ public class DepartmentGroupQuestService {
         QuestStatusType questStatus;
 
         if(Objects.equals(request.xp(), request.maxPoint())) {
-            questStatus = QuestStatusType.MAX_COMPLETE;
+            questStatus = QuestStatusType.COMPLETED;
         } else if (Objects.equals(request.xp(), request.mediumPoint())) {
-            questStatus = QuestStatusType.MEDIUM_COMPLETE;
+            questStatus = QuestStatusType.ONGOING;
         } else {
-            questStatus = QuestStatusType.INCOMPLETE;
+            questStatus = QuestStatusType.READY;
         }
 
         String title = "경험치 획득!";
@@ -108,7 +110,7 @@ public class DepartmentGroupQuestService {
         departmentGroupQuest.updateMaxThreshold(request.maxThreshold());
         departmentGroupQuest.updateMediumThreshold(request.mediumThreshold());
 
-        if(!QuestStatusType.INCOMPLETE.equals(questStatus)) {
+        if(!QuestStatusType.READY.equals(questStatus)) {
             List<User> userList = userRepository.findByDepartmentGroup(departmentGroup);
 
             for(User user : userList) {
@@ -151,6 +153,50 @@ public class DepartmentGroupQuestService {
                     .map(ReadDepartmentGroupQuestResponse::fromEntity)
                     .findFirst()
                     .orElse(null);
+        }
+    }
+
+    @Scheduled(cron = "0 0 4 * * 1")
+    public void failedDepartmentGroupQuestWeek() {
+        List<DepartmentGroup> departmentGroupList = departmentGroupRepository.findAll();
+
+        LocalDateTime now = LocalDateTime.now();
+        int currentWeek = now.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
+        int previousWeek = (currentWeek == 1) ? 52 : currentWeek - 1;
+
+        for (DepartmentGroup departmentGroup : departmentGroupList) {
+            DepartmentGroupQuest departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndWeek(departmentGroup, now.getYear(), previousWeek)
+                    .orElse(null);
+
+            if (departmentGroupQuest != null) {
+                if (!Objects.equals(departmentGroupQuest.getNowXP(), departmentGroupQuest.getMaxPoint())
+                        && !Objects.equals(departmentGroupQuest.getNowXP(), departmentGroupQuest.getMediumPoint())) {
+                    departmentGroupQuest.updateStatus(QuestStatusType.FAILED);
+                }
+            }
+        }
+    }
+
+    @Scheduled(cron = "0 0 4 1 * *")
+    public void failedDepartmentGroupQuestMonth() {
+        List<DepartmentGroup> departmentGroupList = departmentGroupRepository.findAll();
+
+        LocalDateTime previousMonthDate = LocalDateTime.now().minusMonths(1);
+
+        int previousMonth = previousMonthDate.getMonthValue();
+        int previousYear = previousMonthDate.getYear();
+
+        for (DepartmentGroup departmentGroup : departmentGroupList) {
+
+            DepartmentGroupQuest previousMonthQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndMonth(departmentGroup, previousYear, previousMonth)
+                    .orElse(null);
+
+            if (previousMonthQuest != null) {
+                if (!Objects.equals(previousMonthQuest.getNowXP(), previousMonthQuest.getMaxPoint())
+                        && !Objects.equals(previousMonthQuest.getNowXP(), previousMonthQuest.getMediumPoint())) {
+                    previousMonthQuest.updateStatus(QuestStatusType.FAILED);
+                }
+            }
         }
     }
 }

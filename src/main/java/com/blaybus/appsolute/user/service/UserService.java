@@ -126,9 +126,9 @@ public class UserService {
         long lastDepartmentGroupQuestPoint = 0;
 
         for(DepartmentGroupQuest lastDepartmentGroupQuest : lastYearDepartmentGroupQuest) {
-            if(lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
+            if(lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
                 lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMediumPoint();
-            } else if (lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
+            } else if (lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
                 lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMaxPoint();
             }
         }
@@ -167,9 +167,9 @@ public class UserService {
         long thisYearDepartmentGroupQuestPoint = 0;
 
         for(DepartmentGroupQuest thisDepartmentGroupQuest : thisYearDepartmentGroupQuest) {
-            if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
+            if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
                 thisYearDepartmentGroupQuestPoint += thisDepartmentGroupQuest.getMediumPoint();
-            } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
+            } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
                 thisYearDepartmentGroupQuestPoint += thisDepartmentGroupQuest.getMaxPoint();
             }
         }
@@ -299,9 +299,9 @@ public class UserService {
             }
 
             for(DepartmentGroupQuest thisDepartmentGroupQuest : departmentGroupQuestList) {
-                if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
+                if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
                     lastYearXpPoint += thisDepartmentGroupQuest.getMediumPoint();
-                } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
+                } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
                     lastYearXpPoint += thisDepartmentGroupQuest.getMaxPoint();
                 }
             }

@@ -67,11 +67,11 @@ public class DepartmentGroupQuest {
         this.nowXP = nowXP;
 
         if(Objects.equals(nowXP, maxPoint)) {
-            departmentGroupQuestStatus = QuestStatusType.MAX_COMPLETE;
+            departmentGroupQuestStatus = QuestStatusType.COMPLETED;
         } else if(Objects.equals(nowXP, mediumPoint)) {
-            departmentGroupQuestStatus = QuestStatusType.MEDIUM_COMPLETE;
+            departmentGroupQuestStatus = QuestStatusType.ONGOING;
         } else {
-            departmentGroupQuestStatus = QuestStatusType.INCOMPLETE;
+            departmentGroupQuestStatus = QuestStatusType.READY;
         }
     }
 
@@ -85,6 +85,10 @@ public class DepartmentGroupQuest {
 
     public void updateMediumThreshold(Double mediumThreshold) {
         this.mediumThreshold = mediumThreshold;
+    }
+
+    public void updateStatus(QuestStatusType departmentGroupQuestStatus) {
+        this.departmentGroupQuestStatus = departmentGroupQuestStatus;
     }
 
     @Builder

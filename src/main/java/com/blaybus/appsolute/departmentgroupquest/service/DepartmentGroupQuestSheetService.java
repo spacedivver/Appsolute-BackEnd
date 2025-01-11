@@ -72,11 +72,11 @@ public class DepartmentGroupQuestSheetService {
 
                 QuestStatusType status;
                 if(point == maxPoint) {
-                    status = QuestStatusType.MAX_COMPLETE;
+                    status = QuestStatusType.COMPLETED;
                 } else if (point == midPoint) {
-                    status = QuestStatusType.MEDIUM_COMPLETE;
+                    status = QuestStatusType.ONGOING;
                 } else {
-                    status = QuestStatusType.INCOMPLETE;
+                    status = QuestStatusType.READY;
                 }
 
                 departmentGroupQuestRepository.save(getDepartmentGroupQuestWeekly(questType, maxThreshold, midThreshold, midPoint, maxPoint, departmentGroup, year, week, point, status));
@@ -117,11 +117,11 @@ public class DepartmentGroupQuestSheetService {
 
                 QuestStatusType status;
                 if(xp == maxPoint) {
-                    status = QuestStatusType.MAX_COMPLETE;
+                    status = QuestStatusType.COMPLETED;
                 } else if (xp == midPoint) {
-                    status = QuestStatusType.MEDIUM_COMPLETE;
+                    status = QuestStatusType.ONGOING;
                 } else {
-                    status = QuestStatusType.INCOMPLETE;
+                    status = QuestStatusType.READY;
                 }
 
                 departmentGroupQuestRepository.save(getDepartmentGroupQuestMonthly(questType, maxThreshold, midThreshold, midPoint, maxPoint, departmentGroup, year, month, xp, status));
