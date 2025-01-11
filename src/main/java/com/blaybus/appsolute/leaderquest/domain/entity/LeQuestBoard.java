@@ -6,10 +6,9 @@ import lombok.*;
 @Entity
 @Table(name = "LE_QUEST_BOARD")
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Setter
 public class LeQuestBoard {
 
     @Id
@@ -27,10 +26,10 @@ public class LeQuestBoard {
     @Column(name = "actual_point", nullable = false)
     private Double actualPoint;
 
+    @Column(name = "leader_quest_id", nullable = false)
+    private Long leaderQuestId;
+
     public enum QuestStatus {
         READY, ONGOING, COMPLETED, FAILED
     }
-
-    private Long leaderQuestId;
-
 }

@@ -1,9 +1,6 @@
 package com.blaybus.appsolute.leaderquest.controller;
 
-
-import com.blaybus.appsolute.leaderquest.domain.entity.LeQuestBoard;
 import com.blaybus.appsolute.leaderquest.domain.entity.LeaderQuest;
-import com.blaybus.appsolute.leaderquest.domain.request.LeQuestBoardRequest;
 import com.blaybus.appsolute.leaderquest.domain.request.LeaderQuestRequest;
 import com.blaybus.appsolute.leaderquest.service.LeaderQuestService;
 import lombok.RequiredArgsConstructor;

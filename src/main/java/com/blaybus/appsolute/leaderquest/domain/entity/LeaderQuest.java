@@ -1,15 +1,15 @@
 package com.blaybus.appsolute.leaderquest.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name="LEADER_QUEST")
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class LeaderQuest {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,13 +39,12 @@ public class LeaderQuest {
     @Column(name = "max_point", nullable = false)
     private Long maxPoint;
 
-    @Column(name="point",nullable = false)
+    @Column(name="point", nullable = false)
     private Long point;
 
     @Column(name="notes", nullable = false)
     private String notes;
 
     @Column(name="rate", nullable = false)
-    private Long rate;
-
+    private String rate;
 }

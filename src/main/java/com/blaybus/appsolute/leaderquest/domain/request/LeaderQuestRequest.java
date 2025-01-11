@@ -1,9 +1,11 @@
 package com.blaybus.appsolute.leaderquest.domain.request;
 
 import com.blaybus.appsolute.leaderquest.domain.entity.LeaderQuest;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class LeaderQuestRequest {
 
     private String leader_quest_name;
@@ -15,6 +17,5 @@ public class LeaderQuestRequest {
     private Long point;
     private String notes;
     private String rate;
-
 
 }

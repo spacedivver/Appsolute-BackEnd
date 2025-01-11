@@ -20,19 +20,20 @@ public class LeaderQuestService {
 
     private JpaLeaderQuestRepository jpaLeaderQuestRepository;
 
-    public void saveLeaderQuest(LeaderQuestRequest leaderQuestRequest) throws IOException {
-        LeaderQuest leaderQuest=new LeaderQuest();
-        leaderQuest.setLeaderQuestName(leaderQuestRequest.getLeader_quest_name());
-        leaderQuest.setLeaderQuestType(leaderQuestRequest.getQuest_type());
-        leaderQuest.setMaxThreshold(leaderQuestRequest.getMax_threshold());
-        leaderQuest.setMediumThreshold(leaderQuestRequest.getMedium_threshold());
-        leaderQuest.setMaxPoint(leaderQuestRequest.getMax_point());
-        leaderQuest.setMediumPoint(leaderQuestRequest.getMedium_point());
-        leaderQuest.setPoint(leaderQuestRequest.getPoint());
-        leaderQuest.setRate(leaderQuest.getRate());
+    public void saveLeaderQuest(LeaderQuestRequest leaderQuestRequest) {
+        LeaderQuest leaderQuest = LeaderQuest.builder()
+                .leaderQuestName(leaderQuestRequest.getLeader_quest_name())
+                .leaderQuestType(leaderQuestRequest.getQuest_type())
+                .maxThreshold(leaderQuestRequest.getMax_threshold())
+                .mediumThreshold(leaderQuestRequest.getMedium_threshold())
+                .mediumPoint(leaderQuestRequest.getMedium_point())
+                .maxPoint(leaderQuestRequest.getMax_point())
+                .point(leaderQuestRequest.getPoint())
+                .notes(leaderQuestRequest.getNotes())
+                .rate(leaderQuestRequest.getRate())
+                .build();
 
         jpaLeaderQuestRepository.save(leaderQuest);
-
     }
 
     public List<LeaderQuest> getLeaderQuest() throws IOException {

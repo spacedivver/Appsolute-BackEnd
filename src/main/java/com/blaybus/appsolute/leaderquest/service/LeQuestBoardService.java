@@ -29,16 +29,17 @@ public class LeQuestBoardService {
         return repository.findByUserIdAndLeaderQuest_Period(userId, period);
     }
 
-    public void saveLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) throws IOException {
+    public void saveLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
 
-        User user = userRepository.findByEmployeeNumber(leQuestBoardRequest.getEmployeeNumber())
-                .orElseThrow(() -> new IllegalArgumentException("해당 사옹자가 없습니다."));
+        User user = userRepository.findById(leQuestBoardRequest.getUserId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자 ID가 존재하지 않습니다. " + leQuestBoardRequest.getUserId()));
 
-        LeQuestBoard leQuestBoard=new LeQuestBoard();
-        leQuestBoard.setQuestStatus(leQuestBoardRequest.getQuestStatus());
-        leQuestBoard.setActualPoint(leQuestBoardRequest.getActualPoint());
-        leQuestBoard.setUserId(user.getId());
-        leQuestBoard.setLeaderQuestId(leQuestBoardRequest.getLeaderQuestId());
+        LeQuestBoard leQuestBoard = LeQuestBoard.builder()
+                .userId(user.getId())
+                .leaderQuestId(leQuestBoardRequest.getLeaderQuestId())
+                .questStatus(leQuestBoardRequest.getQuestStatus())
+                .actualPoint(leQuestBoardRequest.getActualPoint())
+                .build();
 
         repository.save(leQuestBoard);
     }
