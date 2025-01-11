@@ -6,9 +6,10 @@ import lombok.*;
 @Entity
 @Table(name = "LE_QUEST_BOARD")
 @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
 public class LeQuestBoard {
 
     @Id
@@ -18,10 +19,6 @@ public class LeQuestBoard {
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leader_quest_id", nullable = false)
-    private LeaderQuest leaderQuest;
 
     @Column(name = "quest_status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -34,13 +31,6 @@ public class LeQuestBoard {
         READY, ONGOING, COMPLETED, FAILED
     }
 
-    // 테스트용 팩토리 메서드
-    public static LeQuestBoard createTestEntity(Long userId, LeaderQuest leaderQuest, QuestStatus questStatus, Double actualPoint) {
-        LeQuestBoard leQuestBoard = new LeQuestBoard();
-        leQuestBoard.userId = userId;
-        leQuestBoard.leaderQuest = leaderQuest;
-        leQuestBoard.questStatus = questStatus;
-        leQuestBoard.actualPoint = actualPoint;
-        return leQuestBoard;
-    }
+    private Long leaderQuestId;
+
 }
