@@ -32,7 +32,7 @@ public class DepartmentGroupQuest {
     private Double mediumThreshold;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "quest_stats")
+    @Column(name = "quest_status")
     private QuestStatusType departmentGroupQuestStatus;
 
     @Column(name = "medium_point")

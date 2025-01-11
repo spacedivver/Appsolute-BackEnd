@@ -117,17 +117,23 @@ public class UserService {
             }
         }
 
+        long lastEvaluationPoint = 0;
+
         for(Evaluation lastEvaluation : lastYearEvaluation) {
-            lastYearXpPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
+            lastEvaluationPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
         }
+
+        long lastDepartmentGroupQuestPoint = 0;
 
         for(DepartmentGroupQuest lastDepartmentGroupQuest : lastYearDepartmentGroupQuest) {
             if(lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
-                lastYearXpPoint += lastDepartmentGroupQuest.getMediumPoint();
+                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMediumPoint();
             } else if (lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
-                lastYearXpPoint += lastDepartmentGroupQuest.getMaxPoint();
+                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMaxPoint();
             }
         }
+
+        lastYearXpPoint += lastEvaluationPoint + lastDepartmentGroupQuestPoint;
 
         Xp thisYearXp = xpList.stream()
                 .filter(xp -> xp.getYear() == now.getYear())
@@ -152,21 +158,27 @@ public class UserService {
             }
         }
 
+        long thisYearEvaluationPoint = 0;
+
         for(Evaluation evaluation : thisYearEvaluation) {
-            thisYearXpPoint += evaluation.getEvaluationGrade().getEvaluationGradePoint();
+            thisYearEvaluationPoint += evaluation.getEvaluationGrade().getEvaluationGradePoint();
         }
+
+        long thisYearDepartmentGroupQuestPoint = 0;
 
         for(DepartmentGroupQuest thisDepartmentGroupQuest : thisYearDepartmentGroupQuest) {
             if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MEDIUM_COMPLETE) {
-                lastYearXpPoint += thisDepartmentGroupQuest.getMediumPoint();
+                thisYearDepartmentGroupQuestPoint += thisDepartmentGroupQuest.getMediumPoint();
             } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.MAX_COMPLETE) {
-                lastYearXpPoint += thisDepartmentGroupQuest.getMaxPoint();
+                thisYearDepartmentGroupQuestPoint += thisDepartmentGroupQuest.getMaxPoint();
             }
         }
 
-        long nextLevelRemainXP = Math.max(user.getLevel().getMaxPoint() - (lastYearXpPoint + thisYearXpPoint), 0);
+        thisYearXpPoint += thisYearEvaluationPoint + thisYearDepartmentGroupQuestPoint;
 
-        return ReadUserResponse.from(user, lastYearXpPoint, thisYearXpPoint, nextLevelRemainXP);
+        long nextLevelRemainXP = Math.max(user.getLevel().getMaxPoint() - (lastYearXpPoint + thisYearXpPoint) + 1, 0);
+
+        return ReadUserResponse.from(user, lastYearXpPoint, thisYearXpPoint, nextLevelRemainXP, thisYearEvaluationPoint, thisYearDepartmentGroupQuestPoint);
     }
 
     public void updatePassword(Long id, UpdatePasswordRequest request) {
