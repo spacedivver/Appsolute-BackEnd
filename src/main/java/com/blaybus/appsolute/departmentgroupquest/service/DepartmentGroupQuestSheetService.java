@@ -31,8 +31,6 @@ public class DepartmentGroupQuestSheetService {
 
     private final JpaDepartmentGroupQuestRepository departmentGroupQuestRepository;
     private final JpaDepartmentGroupRepository departmentGroupRepository;
-    private final JpaXpDetailRepository xpDetailRepository;
-    private final JpaXpRepository xpRepository;
     private final JpaUserRepository userRepository;
     private final GoogleSheetService sheetService;
 
@@ -81,9 +79,9 @@ public class DepartmentGroupQuestSheetService {
 
                 departmentGroupQuestRepository.save(getDepartmentGroupQuestWeekly(questType, maxThreshold, midThreshold, midPoint, maxPoint, departmentGroup, year, week, point, status));
 
-                LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
-
-                WeekFields weekFields = WeekFields.of(Locale.KOREA);
+//                LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
+//
+//                WeekFields weekFields = WeekFields.of(Locale.KOREA);
 
 //                LocalDate endOfWeek = firstDayOfYear
 //                        .with(weekFields.weekOfYear(), week)
