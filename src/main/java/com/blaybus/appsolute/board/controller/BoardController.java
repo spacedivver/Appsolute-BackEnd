@@ -19,7 +19,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @Operation(summary="게시판 저장")
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<String> saveBoard(@RequestBody BoardRequest boardRequest) {
 
         boardService.saveBoard(boardRequest);
