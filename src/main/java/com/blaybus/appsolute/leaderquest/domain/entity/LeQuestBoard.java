@@ -32,4 +32,20 @@ public class LeQuestBoard {
     public enum QuestStatus {
         READY, ONGOING, COMPLETED, FAILED
     }
+
+    public void updateActualPoint(Double actualPoint) {
+        if (actualPoint == null || actualPoint < 0) {
+            throw new IllegalArgumentException("유효하지 않은 경험치 값입니다.");
+        }
+        this.actualPoint = actualPoint;
+
+        // 상태 업데이트 로직
+        if (actualPoint == 0) {
+            this.questStatus = QuestStatus.READY;
+        } else if (actualPoint < 50) {
+            this.questStatus = QuestStatus.ONGOING;
+        } else if (actualPoint >= 50) {
+            this.questStatus = QuestStatus.COMPLETED;
+        }
+    }
 }

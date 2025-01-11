@@ -37,5 +37,11 @@ public class LeQuestBoardController {
             return ResponseEntity.status(500).body("Failed to import quest boards: " + e.getMessage());
         }
     }
+    @Operation(summary = "획득 경험치 갱신")
+    @PutMapping("/updateXP")
+    public ResponseEntity<Void> updateLeQuestBoardXP(LeQuestBoardRequest leQuestBoardRequest) {
+        service.updateLeQuestBoardXP(leQuestBoardRequest);
+        return ResponseEntity.ok().build();
+    }
 
 }

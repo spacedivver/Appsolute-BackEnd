@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface JpaLeaderQuestRepository extends JpaRepository<LeaderQuest, Long> {
-    Optional<LeaderQuest> findByName(String name);
+    Optional<LeaderQuest> findByLeaderQuestNameAndLeaderQuestType(String leaderQuestName, LeaderQuest.LeaderQuestType leaderQuestType);
 }

@@ -13,5 +13,6 @@ public class LeQuestBoardRequest {
     private Double actualPoint;
     public LeQuestBoard.QuestStatus questStatus;
     private String employeeNumber;
+    private String leaderQuestName;
 
 }
