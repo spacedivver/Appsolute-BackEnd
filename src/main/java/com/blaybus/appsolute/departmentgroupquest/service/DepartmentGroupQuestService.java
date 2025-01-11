@@ -53,6 +53,15 @@ public class DepartmentGroupQuestService {
             questStatus = QuestStatusType.INCOMPLETE;
         }
 
+        String title = "경험치 획득!";
+        String message;
+
+        if(request.questType() == QuestType.WEEKLY) {
+            message = request.year() + "년" + request.period() + "주차" + "직무별 퀘스트로" + request.xp() + "경험치를 획득하였습니다.";
+        } else {
+            message = request.year() + "년" + request.period() + "월" + "직무별 퀘스트로" + request.xp() + "경험치를 획득하였습니다.";
+        }
+
         if(request.questType() == QuestType.MONTHLY) {
             departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndMonth(departmentGroup, request.year(), request.period())
                     .orElseGet(
@@ -69,6 +78,7 @@ public class DepartmentGroupQuestService {
                                             .month(request.period())
                                             .nowXP(request.xp())
                                             .note(request.notes())
+                                            .productivity(request.productivity())
                                             .build()
                             )
                     );
@@ -87,21 +97,26 @@ public class DepartmentGroupQuestService {
                                     .week(request.period())
                                     .nowXP(request.xp())
                                     .note(request.notes())
+                                    .productivity(request.productivity())
                                     .build()
                             )
                     );
         }
 
         departmentGroupQuest.updateNowXP(request.xp());
+        departmentGroupQuest.updateProductivity(request.productivity());
+        departmentGroupQuest.updateMaxThreshold(request.maxThreshold());
+        departmentGroupQuest.updateMediumThreshold(request.mediumThreshold());
 
-        List<User> userList = userRepository.findByDepartmentGroup(departmentGroup);
+        if(!QuestStatusType.INCOMPLETE.equals(questStatus)) {
+            List<User> userList = userRepository.findByDepartmentGroup(departmentGroup);
 
-        for(User user : userList) {
-            List<ReadFcmTokenResponse> tokenList = tokenService.getFcmTokens(user.getId());
+            for(User user : userList) {
+                List<ReadFcmTokenResponse> tokenList = tokenService.getFcmTokens(user.getId());
 
-            for(ReadFcmTokenResponse token : tokenList) {
-                messageService.sendMessageTo(user, token.fcmToken(), "경험치 획득!",
-                        "직무별 퀘스트로 " + request.xp() + "경험치를 획득하였습니다.", null);
+                for(ReadFcmTokenResponse token : tokenList) {
+                    messageService.sendMessageTo(user, token.fcmToken(), title, message, null);
+                }
             }
         }
     }

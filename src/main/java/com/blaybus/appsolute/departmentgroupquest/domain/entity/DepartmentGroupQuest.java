@@ -60,6 +60,9 @@ public class DepartmentGroupQuest {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "productivity")
+    private Double productivity;
+
     public void updateNowXP(Long nowXP) {
         this.nowXP = nowXP;
 
@@ -72,8 +75,20 @@ public class DepartmentGroupQuest {
         }
     }
 
+    public void updateProductivity(Double productivity) {
+        this.productivity = productivity;
+    }
+
+    public void updateMaxThreshold(Double maxThreshold) {
+        this.maxThreshold = maxThreshold;
+    }
+
+    public void updateMediumThreshold(Double mediumThreshold) {
+        this.mediumThreshold = mediumThreshold;
+    }
+
     @Builder
-    public DepartmentGroupQuest(Long departmentGroupQuestId, QuestType departmentQuestType, Double maxThreshold, Double mediumThreshold, QuestStatusType departmentGroupQuestStatus, Long mediumPoint, Long maxPoint, DepartmentGroup departmentGroup, Integer year, Integer month, Integer week, Long nowXP, String note) {
+    public DepartmentGroupQuest(Long departmentGroupQuestId, QuestType departmentQuestType, Double maxThreshold, Double mediumThreshold, QuestStatusType departmentGroupQuestStatus, Long mediumPoint, Long maxPoint, DepartmentGroup departmentGroup, Integer year, Integer month, Integer week, Long nowXP, String note, Double productivity) {
         this.departmentGroupQuestId = departmentGroupQuestId;
         this.departmentQuestType = departmentQuestType;
         this.maxThreshold = maxThreshold;
@@ -87,5 +102,6 @@ public class DepartmentGroupQuest {
         this.week = week;
         this.nowXP = nowXP;
         this.note = note;
+        this.productivity = productivity;
     }
 }

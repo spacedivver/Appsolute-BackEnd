@@ -39,6 +39,13 @@ public class EvaluationService {
         String employeeNumber = request.employeeNumber();
         PeriodType period = PeriodType.valueOf(request.period());
         String notes = request.notes();
+        String periodString;
+
+        if(period == PeriodType.SECOND_HALF) {
+            periodString = "하반기";
+        } else {
+            periodString = "상반기";
+        }
 
         User user = userRepository.findByEmployeeNumber(employeeNumber)
                 .orElseThrow(() -> new ApplicationException(
@@ -65,7 +72,7 @@ public class EvaluationService {
 
         for(ReadFcmTokenResponse token : tokenList) {
             messageService.sendMessageTo(user, token.fcmToken(), "경험치를 획득하였습니다.",
-                    "인사평가로 " + evaluation.getEvaluationGrade().getEvaluationGradePoint() + "경험치를 획득하였습니다", null);
+                    year + "년도" + periodString + "인사평가로 " + evaluation.getEvaluationGrade().getEvaluationGradePoint() + "경험치를 획득하였습니다", null);
         }
     }
 
