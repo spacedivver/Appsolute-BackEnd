@@ -1,14 +1,13 @@
 package com.blaybus.appsolute.leaderquest.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name="LEADER_QUEST")
 @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@Setter
 public class LeaderQuest {
 
 
@@ -24,7 +23,7 @@ public class LeaderQuest {
         WEEKLY, MONTHLY
     }
 
-    @Column(name = "leader_quest_type", nullable = false)
+    @Column(name = "quest_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private LeaderQuestType leaderQuestType;
 
@@ -40,25 +39,13 @@ public class LeaderQuest {
     @Column(name = "max_point", nullable = false)
     private Long maxPoint;
 
-    @Column(name = "year", nullable = false)
-    private String year;
+    @Column(name="point",nullable = false)
+    private Long point;
 
-    @Column(name = "period", nullable = false)
-    private Integer period;
+    @Column(name="notes", nullable = false)
+    private String notes;
 
-
-    // 테스트용 팩토리 메서드
-    public static LeaderQuest createTestEntity(String name, LeaderQuestType type, String max, String medium, Long mediumPoint, Long maxPoint, String year, Integer period) {
-        LeaderQuest leaderQuest = new LeaderQuest();
-        leaderQuest.leaderQuestName = name;
-        leaderQuest.leaderQuestType = type;
-        leaderQuest.maxThreshold = max;
-        leaderQuest.mediumThreshold = medium;
-        leaderQuest.mediumPoint = mediumPoint;
-        leaderQuest.maxPoint = maxPoint;
-        leaderQuest.year = year;
-        leaderQuest.period = period;
-        return leaderQuest;
-    }
+    @Column(name="rate", nullable = false)
+    private Long rate;
 
 }
