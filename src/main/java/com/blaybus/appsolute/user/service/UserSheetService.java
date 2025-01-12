@@ -56,13 +56,13 @@ public class UserSheetService {
                                     ErrorStatus.toErrorStatus("존재하지 않는 레벨입니다.", 404, LocalDateTime.now())
                             ));
 
-            Long totalXP = Long.parseLong(row.get(9).toString().replace(",", ""));
+//            Long totalXP = Long.parseLong(row.get(9).toString().replace(",", ""));
 
-            if(level.getLevelAchievement() > totalXP && totalXP > level.getMaxPoint()) {
-                throw new ApplicationException(
-                        ErrorStatus.toErrorStatus("해당 레벨이 아닙니다.", 400, LocalDateTime.now())
-                );
-            }
+//            if(level.getLevelAchievement() > totalXP && totalXP > level.getMaxPoint()) {
+//                throw new ApplicationException(
+//                        ErrorStatus.toErrorStatus("해당 레벨이 아닙니다.", 400, LocalDateTime.now())
+//                );
+//            }
 
             User user = userRepository.save(parseToUser(row, departmentGroup, level));
 

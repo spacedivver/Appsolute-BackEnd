@@ -52,7 +52,6 @@ public class UserService {
 
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-
     public LoginUserResponse login(LoginUserRequest request) {
 
         Optional<User> userOptional = userRepository.findByUserIdAndChangedPassword(request.userId(), request.password());
@@ -101,13 +100,13 @@ public class UserService {
                 .filter(xp -> xp.getYear() <= now.getYear() -1)
                 .toList();
 
-        List<Evaluation> lastYearEvaluation = evaluationList.stream()
-                .filter(evaluation -> evaluation.getYear() <= now.getYear() -1)
-                .toList();
-
-        List<DepartmentGroupQuest> lastYearDepartmentGroupQuest = departmentGroupQuestList.stream()
-                .filter(departmentGroupQuest -> departmentGroupQuest.getYear() <= now.getYear() -1)
-                .toList();
+//        List<Evaluation> lastYearEvaluation = evaluationList.stream()
+//                .filter(evaluation -> evaluation.getYear() <= now.getYear() -1)
+//                .toList();
+//
+//        List<DepartmentGroupQuest> lastYearDepartmentGroupQuest = departmentGroupQuestList.stream()
+//                .filter(departmentGroupQuest -> departmentGroupQuest.getYear() <= now.getYear() -1)
+//                .toList();
 
         for(Xp xp : lastYearXp) {
             List<XpDetail> xpDetailList = xpDetailRepository.findByXp(xp);
@@ -117,23 +116,23 @@ public class UserService {
             }
         }
 
-        long lastEvaluationPoint = 0;
+//        long lastEvaluationPoint = 0;
+//
+//        for(Evaluation lastEvaluation : lastYearEvaluation) {
+//            lastEvaluationPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
+//        }
+//
+//        long lastDepartmentGroupQuestPoint = 0;
+//
+//        for(DepartmentGroupQuest lastDepartmentGroupQuest : lastYearDepartmentGroupQuest) {
+//            if(lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
+//                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMediumPoint();
+//            } else if (lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
+//                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMaxPoint();
+//            }
+//        }
 
-        for(Evaluation lastEvaluation : lastYearEvaluation) {
-            lastEvaluationPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
-        }
-
-        long lastDepartmentGroupQuestPoint = 0;
-
-        for(DepartmentGroupQuest lastDepartmentGroupQuest : lastYearDepartmentGroupQuest) {
-            if(lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
-                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMediumPoint();
-            } else if (lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
-                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMaxPoint();
-            }
-        }
-
-        lastYearXpPoint += lastEvaluationPoint + lastDepartmentGroupQuestPoint;
+//        lastYearXpPoint += lastEvaluationPoint + lastDepartmentGroupQuestPoint;
 
         Xp thisYearXp = xpList.stream()
                 .filter(xp -> xp.getYear() == now.getYear())
@@ -262,6 +261,20 @@ public class UserService {
         user.updateUserId(request.userId());
     }
 
+    public void updateLevelParam(UpdateLevelRequest request) {
+        User user = userRepository.findByEmployeeNumber(request.employeeNumber())
+                .orElseThrow(() -> new ApplicationException(
+                        ErrorStatus.toErrorStatus("해당하는 유저가 없습니다.", 404, LocalDateTime.now())
+                ));
+
+        Level level = levelRepository.findByLevelName(request.levelName())
+                        .orElseThrow(() -> new ApplicationException(
+                                ErrorStatus.toErrorStatus("해당하는 레벨이 없습니다.", 404, LocalDateTime.now())
+                        ));
+
+        user.updateLevel(level);
+    }
+
     //매년 1월 1일 새벽 4시에 레벨 업데이트
     @Scheduled(cron = "0 0 4 1 1 *")
     public void updateLevel() {
@@ -311,6 +324,58 @@ public class UserService {
             }
 
             user.updateLevel(level);
+        }
+    }
+
+    //1월 1일 새벽 5시에 작년 관련 xp를 테이블로 옮깁니다.
+    @Scheduled(cron = "0 0 5 1 1 *")
+    public void updateXp() {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        List<User> userList = userRepository.findAll();
+
+        for(User user : userList) {
+            List<Evaluation> evaluationList = evaluationRepository.findByUser(user);
+            List<DepartmentGroupQuest> departmentGroupQuestList = departmentGroupQuestRepository.findByDepartmentGroup(user.getDepartmentGroup());
+
+            long lastYearXpPoint = 0;
+
+            List<Evaluation> lastYearEvaluation = evaluationList.stream()
+                    .filter(evaluation -> evaluation.getYear() == now.getYear() -1)
+                    .toList();
+
+            List<DepartmentGroupQuest> departmentGroupQuest = departmentGroupQuestList.stream()
+                    .filter(xp -> xp.getYear() == now.getYear() -1)
+                    .toList();
+
+
+            for(Evaluation lastEvaluation : lastYearEvaluation) {
+                lastYearXpPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
+            }
+
+            for(DepartmentGroupQuest thisDepartmentGroupQuest : departmentGroupQuest) {
+                if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
+                    lastYearXpPoint += thisDepartmentGroupQuest.getMediumPoint();
+                } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
+                    lastYearXpPoint += thisDepartmentGroupQuest.getMaxPoint();
+                }
+            }
+
+            Xp xp = Xp.builder()
+                    .user(user)
+                    .year(now.getYear()-1)
+                    .build();
+
+            xpRepository.save(xp);
+
+            XpDetail xpDetail = XpDetail.builder()
+                    .createdAt(LocalDateTime.now())
+                    .xp(xp)
+                    .point(lastYearXpPoint)
+                    .build();
+
+            xpDetailRepository.save(xpDetail);
         }
     }
 }

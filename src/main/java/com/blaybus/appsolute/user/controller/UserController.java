@@ -86,4 +86,10 @@ public class UserController {
         userService.deleteUser(request);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/sheet-level")
+    public ResponseEntity<Void> changeLevel(UpdateLevelRequest request) {
+        userService.updateLevelParam(request);
+        return ResponseEntity.ok().build();
+    }
 }
