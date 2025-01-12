@@ -50,6 +50,13 @@ jobs:
         with:
           arguments: clean bootJar
 
+      - name: Configure Docker for insecure registry
+        run: |
+          echo '{
+            "insecure-registries": ["${{ secrets.HARBOR_URL }}"]
+          }' | sudo tee /etc/docker/daemon.json
+          sudo systemctl restart docker
+
       # 7. Docker 이미지 빌드
       - name: Docker image build
         run: docker build -t ${{ secrets.HARBOR_URL }}/${{ secrets.HARBOR_PROJECT }}/appsolute:latest .
