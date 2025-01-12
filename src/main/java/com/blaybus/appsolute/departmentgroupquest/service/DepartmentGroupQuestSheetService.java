@@ -1,11 +1,15 @@
 package com.blaybus.appsolute.departmentgroupquest.service;
 
+import com.blaybus.appsolute.commons.exception.ApplicationException;
+import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
 import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
 import com.blaybus.appsolute.departmentgroup.repository.JpaDepartmentGroupRepository;
 import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentGroupQuest;
+import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentQuestDetail;
 import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestStatusType;
 import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestType;
 import com.blaybus.appsolute.departmentgroupquest.repository.JpaDepartmentGroupQuestRepository;
+import com.blaybus.appsolute.departmentgroupquest.repository.JpaDepartmentQuestDetailRepository;
 import com.blaybus.appsolute.googlesheet.service.GoogleSheetService;
 import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
@@ -19,6 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.List;
 import java.util.Locale;
@@ -33,6 +39,7 @@ public class DepartmentGroupQuestSheetService {
     private final JpaDepartmentGroupRepository departmentGroupRepository;
     private final JpaUserRepository userRepository;
     private final GoogleSheetService sheetService;
+    private final JpaDepartmentQuestDetailRepository departmentQuestDetailRepository;
 
     public void syncGroupQuestSheet() {
         List<List<Object>> values = sheetService.readSpreadsheet("직무별 퀘스트!F11:H11");
@@ -78,34 +85,46 @@ public class DepartmentGroupQuestSheetService {
                 }
 
                 departmentGroupQuestRepository.save(getDepartmentGroupQuestWeekly(questType, maxThreshold, midThreshold, midPoint, maxPoint, departmentGroup, year, week, point, status));
-
-//                LocalDate firstDayOfYear = LocalDate.of(year, 1, 1);
-//
-//                WeekFields weekFields = WeekFields.of(Locale.KOREA);
-
-//                LocalDate endOfWeek = firstDayOfYear
-//                        .with(weekFields.weekOfYear(), week)
-//                        .with(weekFields.dayOfWeek(), 7);
-
-//                for(User user : userList) {
-//
-//                    Xp xp = xpRepository.findByUserAndYear(user, year)
-//                            .orElseGet(() -> xpRepository.save(
-//                                    Xp.builder()
-//                                            .year(year)
-//                                            .user(user)
-//                                            .build()
-//                            ));
-//
-//                    XpDetail xpDetail = XpDetail.builder()
-//                            .point(point)
-//                            .createdAt(endOfWeek.atStartOfDay())
-//                            .xp(xp)
-//                            .build();
-//
-//                    xpDetailRepository.save(xpDetail);
-//                }
             }
+
+            List<List<Object>> detailSheet = sheetService.readSpreadsheet("직무별 퀘스트!J14:S378");
+
+            for(List<Object> row : detailSheet) {
+
+                if(row.size() != 10) {
+                    continue;
+                }
+
+                DepartmentGroupQuest departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndWeek(departmentGroup, year, Integer.parseInt((String)row.get(1)))
+                        .orElseThrow(() -> new ApplicationException(
+                                ErrorStatus.toErrorStatus("해당하는 퀘스트가 없습니다.", 404, LocalDateTime.now())
+                        ));
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-M-d");
+
+                LocalDate date = LocalDate.parse((String)row.get(2), formatter);
+                double revenue = row.get(4) != null ? Double.parseDouble((String)row.get(4)) : 0;
+                double laborCost = row.get(4) != null ? Double.parseDouble((String)row.get(5)) : 0;
+                double designServiceFee = row.get(4) != null ? Double.parseDouble((String)row.get(6)) : 0;
+                double employeeSalary = row.get(4) != null ? Double.parseDouble((String)row.get(7)) : 0;
+                double retirementBenefit = row.get(4) != null ? Double.parseDouble((String)row.get(8)) : 0;
+                double socialInsuranceBenefit = row.get(4) != null ? Double.parseDouble((String)row.get(9)) : 0;
+
+                DepartmentQuestDetail departmentQuestDetail = DepartmentQuestDetail.builder()
+                        .departmentQuestDetailDate(date)
+                        .revenue(revenue)
+                        .laborCost(laborCost)
+                        .designServiceFee(designServiceFee)
+                        .employeeSalary(employeeSalary)
+                        .retirementBenefit(retirementBenefit)
+                        .socialInsuranceBenefit(socialInsuranceBenefit)
+                        .departmentGroupQuest(departmentGroupQuest)
+                        .build();
+
+                departmentQuestDetailRepository.save(departmentQuestDetail);
+            }
+
+
         } else {
             for(int i = 0; i <=11; i++) {
                 Double maxThreshold = (Double)values.get(i).get(0);
@@ -123,6 +142,38 @@ public class DepartmentGroupQuestSheetService {
                 }
 
                 departmentGroupQuestRepository.save(getDepartmentGroupQuestMonthly(questType, maxThreshold, midThreshold, midPoint, maxPoint, departmentGroup, year, month, xp, status));
+            }
+
+            List<List<Object>> detailSheet = sheetService.readSpreadsheet("직무별 퀘스트!J14:S378");
+
+            for(List<Object> row : detailSheet) {
+                DepartmentGroupQuest departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndMonth(departmentGroup, year, Integer.parseInt((String)row.get(0)))
+                        .orElseThrow(() -> new ApplicationException(
+                                ErrorStatus.toErrorStatus("해당하는 퀘스트가 없습니다.", 404, LocalDateTime.now())
+                        ));
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-M-d");
+
+                LocalDate date = LocalDate.parse((String)row.get(2), formatter);
+                double revenue = row.get(4) != null ? Double.parseDouble((String)row.get(4)) : 0;
+                double laborCost = row.get(4) != null ? Double.parseDouble((String)row.get(5)) : 0;
+                double designServiceFee = row.get(4) != null ? Double.parseDouble((String)row.get(6)) : 0;
+                double employeeSalary = row.get(4) != null ? Double.parseDouble((String)row.get(7)) : 0;
+                double retirementBenefit = row.get(4) != null ? Double.parseDouble((String)row.get(8)) : 0;
+                double socialInsuranceBenefit = row.get(4) != null ? Double.parseDouble((String)row.get(9)) : 0;
+
+                DepartmentQuestDetail departmentQuestDetail = DepartmentQuestDetail.builder()
+                        .departmentQuestDetailDate(date)
+                        .revenue(revenue)
+                        .laborCost(laborCost)
+                        .designServiceFee(designServiceFee)
+                        .employeeSalary(employeeSalary)
+                        .retirementBenefit(retirementBenefit)
+                        .socialInsuranceBenefit(socialInsuranceBenefit)
+                        .departmentGroupQuest(departmentGroupQuest)
+                        .build();
+
+                departmentQuestDetailRepository.save(departmentQuestDetail);
             }
         }
     }
