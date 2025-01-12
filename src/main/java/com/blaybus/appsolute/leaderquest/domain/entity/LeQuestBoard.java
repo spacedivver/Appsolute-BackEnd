@@ -24,7 +24,7 @@ public class LeQuestBoard {
     private QuestStatus questStatus;
 
     @Column(name = "actual_point", nullable = false)
-    private Double actualPoint;
+    private Long actualPoint;
 
     @Column(name = "leader_quest_id", nullable = false)
     private Long leaderQuestId;
@@ -35,7 +35,7 @@ public class LeQuestBoard {
 
     private Long month;
 
-    public void updateActualPoint(Double actualPoint) {
+    public void updateActualPoint(Long actualPoint) {
         if (actualPoint == null || actualPoint < 0) {
             throw new IllegalArgumentException("유효하지 않은 경험치 값입니다.");
         }
