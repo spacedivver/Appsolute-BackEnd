@@ -31,7 +31,7 @@ jobs:
       - name: set up application.properties
         run: echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
 
-      - name: Generate JSON file
+      - name: Generate FCM JSON file
         env:
           FIREBASE_JSON: ${{ secrets.FIREBASE }}
         run: |
@@ -39,12 +39,12 @@ jobs:
           echo ${FIREBASE_JSON} > src/main/resources/firebase/blaybus-appsolute-firebase-adminsdk.json
 
       # 5. Google Sheet JSON 파일 생성
-      - name: Create FCM JSON
+      - name: Create GOOGLE SHEET JSON
         env:
-          GOOGLE_SHEET: ${{ secrets.GOOGLESHEET }}
+          GOOGLESHEET: ${{ secrets.GOOGLESHEET }}
         run: |
           mkdir -p src/main/resources/googlesheet
-          echo ${GOOGLE_SHEET} > /src/main/resources/googlesheet/google-account-key.json
+          echo ${GOOGLESHEET} > /src/main/resources/googlesheet/google-account-key.json
 
       # 6. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
