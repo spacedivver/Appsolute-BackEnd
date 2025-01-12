@@ -45,6 +45,9 @@ dependencies {
     implementation 'com.google.api-client:google-api-client-jackson2:1.34.1'
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.14.0'
 
+    //postgresql
+    implementation 'org.postgresql:postgresql:42.7.3'
+
     //firebase
     implementation 'com.google.firebase:firebase-admin:9.2.0'
 
