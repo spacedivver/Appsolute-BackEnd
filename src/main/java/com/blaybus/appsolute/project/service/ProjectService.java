@@ -2,6 +2,9 @@ package com.blaybus.appsolute.project.service;
 
 import com.blaybus.appsolute.commons.exception.ApplicationException;
 import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
+import com.blaybus.appsolute.fcm.domain.response.ReadFcmTokenResponse;
+import com.blaybus.appsolute.fcm.service.FcmTokenService;
+import com.blaybus.appsolute.fcm.service.MessageService;
 import com.blaybus.appsolute.project.domain.entity.Project;
 import com.blaybus.appsolute.project.domain.request.ProjectRequest;
 import com.blaybus.appsolute.project.domain.response.ProjectResponse;
@@ -24,8 +27,8 @@ public class ProjectService {
 
     private final JpaProjectRepository jpaProjectRepository;
     private JpaUserRepository userRepository;
-
-    private JpaProjectRepository projectRepository;
+    private final FcmTokenService tokenService;
+    private final MessageService messageService;
 
     public void saveProject(ProjectRequest projectRequest) {
 
@@ -40,11 +43,11 @@ public class ProjectService {
         project.setNotes(projectRequest.getNotes());
         project.setUserId(user.getId());
 
-        projectRepository.save(project);
+        jpaProjectRepository.save(project);
     }
 
     public List<ProjectResponse> getProjectByUser(Long userId) {
-        return projectRepository.findByUserId(userId).stream()
+        return jpaProjectRepository.findByUserId(userId).stream()
                 .map(ProjectResponse::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -63,6 +66,17 @@ public class ProjectService {
                 ));
 
         project.updateGrantedPoint(projectRequest.getGrantedPoint());
+
+        String title = "경험치 획득!";
+        String message=project.getMonth()+"월"+project.getDay()+"일"+project.getProjectName()
+                +"관련 전사 프로젝트"+ project.getGrantedPoint() + "경험치를 획득하였습니다.";
+
+        List<ReadFcmTokenResponse> tokens = tokenService.getFcmTokens(user.getId());
+
+        if (!tokens.isEmpty()) {
+            ReadFcmTokenResponse token = tokens.get(0);
+            messageService.sendMessageTo(user, token.fcmToken(), title, message, null);
+        }
 
         jpaProjectRepository.save(project);
     }
