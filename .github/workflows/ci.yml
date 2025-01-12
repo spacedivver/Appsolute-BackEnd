@@ -31,21 +31,20 @@ jobs:
       - name: set up application.properties
         run: echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
 
-      # 4. FCM JSON 파일 생성
-      - name: Create FCM JSON
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "blaybus-appsolute-firebase-adminsdk.json"
-          json: ${{ secrets.FIREBASE }}
-          dir: './src/main/resources/firebase/'
+      - name: Generate JSON file
+        env:
+          FIREBASE_JSON: ${{ secrets.FIREBASE }}
+        run: |
+          mkdir -p src/main/resources/firebase
+          echo ${FIREBASE_JSON} > src/main/resources/firebase/blaybus-appsolute-firebase-adminsdk.json
 
       # 5. Google Sheet JSON 파일 생성
       - name: Create FCM JSON
-        uses: jsdaniell/create-json@1.1.2
-        with:
-          name: "google-account-key.json"
-          json: ${{ secrets.GOOGLESHEET }}
-          dir: './src/main/resources/googlesheet/'
+        env:
+          GOOGLE_SHEET: ${{ secrets.GOOGLESHEET }}
+        run: |
+          mkdir -p src/main/resources/googlesheet
+          echo ${GOOGLE_SHEET} > /src/main/resources/googlesheet/google-account-key.json
 
       # 6. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
