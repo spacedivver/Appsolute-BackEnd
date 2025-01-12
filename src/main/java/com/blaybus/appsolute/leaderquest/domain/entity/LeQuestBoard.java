@@ -33,13 +33,14 @@ public class LeQuestBoard {
         READY, ONGOING, COMPLETED, FAILED
     }
 
+    private Long month;
+
     public void updateActualPoint(Double actualPoint) {
         if (actualPoint == null || actualPoint < 0) {
             throw new IllegalArgumentException("유효하지 않은 경험치 값입니다.");
         }
         this.actualPoint = actualPoint;
 
-        // 상태 업데이트 로직
         if (actualPoint == 0) {
             this.questStatus = QuestStatus.READY;
         } else if (actualPoint < 50) {

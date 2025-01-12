@@ -22,8 +22,8 @@ public class LeQuestBoardController {
     @GetMapping("/get")
     public ResponseEntity<List<LeQuestBoard>> getLeQuestBoard(
             @RequestParam Long userId,
-            @RequestParam Integer period) {
-        List<LeQuestBoard> result = service.getLeQuestBoard(userId, period);
+            @RequestParam Long month) {
+        List<LeQuestBoard> result = service.getLeQuestBoard(userId, month);
         return ResponseEntity.ok(result);
     }
 

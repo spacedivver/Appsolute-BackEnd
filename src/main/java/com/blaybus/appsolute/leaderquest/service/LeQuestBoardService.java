@@ -27,8 +27,8 @@ public class LeQuestBoardService {
     private final JpaLeaderQuestRepository leaderQuestRepository;
     private final JpaUserRepository userRepository;
 
-    public List<LeQuestBoard> getLeQuestBoard(Long userId, Integer period) {
-        return leQuestBoardRepository.findByUserIdAndLeaderQuest_Period(userId, period);
+    public List<LeQuestBoard> getLeQuestBoard(Long userId, Long month) {
+        return leQuestBoardRepository.findByUserIdAndMonth(userId, month);
     }
 
     public void saveLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
