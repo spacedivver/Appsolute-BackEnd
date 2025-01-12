@@ -24,7 +24,6 @@ jobs:
       - name: Grant execute permission for Gradle Wrapper
         run: chmod +x gradlew
 
-      # 3. application.properties,AuthKey생성
       - name: create resources folder if not exists
         run: mkdir -p src/main/resources
 
@@ -38,13 +37,12 @@ jobs:
           mkdir -p src/main/resources/firebase
           echo ${FIREBASE_JSON} > src/main/resources/firebase/blaybus-appsolute-firebase-adminsdk.json
 
-      # 5. Google Sheet JSON 파일 생성
-      - name: Create GOOGLE SHEET JSON
+      - name: Generate GOOGLESHEET JSON file
         env:
           GOOGLESHEET: ${{ secrets.GOOGLESHEET }}
         run: |
           mkdir -p src/main/resources/googlesheet
-          echo ${GOOGLESHEET} > /src/main/resources/googlesheet/google-account-key.json
+          echo ${GOOGLESHEET} > src/main/resources/googlesheet/google-account-key.json
 
       # 6. Spring Boot 애플리케이션 빌드
       - name: Build with Gradle
