@@ -23,9 +23,11 @@ bin/
 *.iml
 *.ipr
 out/
+**/*.json
 !**/src/main/**/out/
 !**/src/test/**/out/
 **/.DS_Store
+**/application.properties
 
 ### NetBeans ###
 /nbproject/private/
@@ -36,3 +38,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+blaybus-appsolute-firebase-adminsdk.json
+
+google-account-key.json
