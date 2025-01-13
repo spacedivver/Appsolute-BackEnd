@@ -16,36 +16,40 @@ public class LeQuestBoard {
     @Column(name = "le_board_id")
     private Long leBoardId;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "quest_status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private QuestStatus questStatus;
-
-    @Column(name = "actual_point", nullable = false)
-    private Long actualPoint;
-
-    @Column(name = "leader_quest_id", nullable = false)
+    @Column(name = "leader_quest_id")
     private Long leaderQuestId;
+
+    @Column(name="month")
+    private Long month;
 
     public enum QuestStatus {
         READY, ONGOING, COMPLETED, FAILED
     }
 
-    private Long month;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private QuestStatus questStatus;
 
-    public void updateActualPoint(Long actualPoint) {
-        if (actualPoint == null || actualPoint < 0) {
+    @Column(name = "granted_point")
+    private Long grantedPoint;
+
+    @Column(name="note")
+    private String note;
+
+    public void updateGrantedPoint(Long grantedPoint) {
+        if (grantedPoint == null || grantedPoint < 0) {
             throw new IllegalArgumentException("유효하지 않은 경험치 값입니다.");
         }
-        this.actualPoint = actualPoint;
+        this.grantedPoint = grantedPoint;
 
-        if (actualPoint == 0) {
+        if (grantedPoint == 0) {
             this.questStatus = QuestStatus.READY;
-        } else if (actualPoint < 50) {
+        } else if (grantedPoint < 50) {
             this.questStatus = QuestStatus.ONGOING;
-        } else if (actualPoint >= 50) {
+        } else if (grantedPoint >= 50) {
             this.questStatus = QuestStatus.COMPLETED;
         }
     }

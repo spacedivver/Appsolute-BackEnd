@@ -8,14 +8,15 @@ import lombok.Data;
 @Builder
 public class LeaderQuestRequest {
 
-    private String leader_quest_name;
-    private LeaderQuest.LeaderQuestType quest_type;
-    private String max_threshold;
-    private String medium_threshold;
-    private Long max_point;
-    private Long medium_point;
-    private Long point;
-    private String notes;
+    private String leaderQuestName;
+    private LeaderQuest.LeaderQuestType questType;
     private String rate;
+    private Long totalQuestPoint;
+    private Long maxPoint;
+    private Long mediumPoint;
+    private String maxThreshold;
+    private String mediumThreshold;
+    private String note;
+
 
 }

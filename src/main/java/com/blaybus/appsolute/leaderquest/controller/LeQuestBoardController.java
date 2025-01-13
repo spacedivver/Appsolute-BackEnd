@@ -19,7 +19,7 @@ public class LeQuestBoardController {
     private final LeQuestBoardService service;
 
     @Operation(summary = "개인별 리더 퀘스트 현황 정보 조회")
-    @GetMapping("/get")
+    @GetMapping("")
     public ResponseEntity<List<LeQuestBoard>> getLeQuestBoard(
             @RequestParam Long userId,
             @RequestParam Long month) {
@@ -28,19 +28,9 @@ public class LeQuestBoardController {
     }
 
     @Operation(summary = "개인별 리더 퀘스트 현황을 저장")
-    @GetMapping("/save")
-    public ResponseEntity<String> saveLeQuestBoard(@RequestBody LeQuestBoardRequest leQuestBoardRequest) {
-        try {
-            service.saveLeQuestBoard(leQuestBoardRequest);
-            return ResponseEntity.ok("성공적으로 저장되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to import quest boards: " + e.getMessage());
-        }
-    }
-    @Operation(summary = "획득 경험치 갱신")
-    @PutMapping("/updateXP")
-    public ResponseEntity<Void> updateLeQuestBoardXP(LeQuestBoardRequest leQuestBoardRequest) {
-        service.updateLeQuestBoardXP(leQuestBoardRequest);
+    @PutMapping("/save")
+    public ResponseEntity<Void> updateLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
+        service.updateLeQuestBoard(leQuestBoardRequest);
         return ResponseEntity.ok().build();
     }
 

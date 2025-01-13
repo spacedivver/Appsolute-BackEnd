@@ -22,14 +22,14 @@ public class LeaderQuestService {
 
     public void saveLeaderQuest(LeaderQuestRequest leaderQuestRequest) {
         LeaderQuest leaderQuest = LeaderQuest.builder()
-                .leaderQuestName(leaderQuestRequest.getLeader_quest_name())
-                .leaderQuestType(leaderQuestRequest.getQuest_type())
-                .maxThreshold(leaderQuestRequest.getMax_threshold())
-                .mediumThreshold(leaderQuestRequest.getMedium_threshold())
-                .mediumPoint(leaderQuestRequest.getMedium_point())
-                .maxPoint(leaderQuestRequest.getMax_point())
-                .point(leaderQuestRequest.getPoint())
-                .notes(leaderQuestRequest.getNotes())
+                .leaderQuestName(leaderQuestRequest.getLeaderQuestName())
+                .leaderQuestType(leaderQuestRequest.getQuestType())
+                .maxThreshold(leaderQuestRequest.getMaxThreshold())
+                .mediumThreshold(leaderQuestRequest.getMediumThreshold())
+                .mediumPoint(leaderQuestRequest.getMediumPoint())
+                .maxPoint(leaderQuestRequest.getMaxPoint())
+                .totalQuestPoint(leaderQuestRequest.getTotalQuestPoint())
+                .note(leaderQuestRequest.getNote())
                 .rate(leaderQuestRequest.getRate())
                 .build();
 
