@@ -3,9 +3,7 @@ package com.blaybus.appsolute.project.domain.entity;
 import com.blaybus.appsolute.commons.exception.ApplicationException;
 import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -13,22 +11,35 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "PROJECT")
 @RequiredArgsConstructor
-@Setter
+@AllArgsConstructor
+@Builder
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="project_id")
     private Long projectId;
 
+    @Column(name="month")
     private Integer month;
+
+    @Column(name="day")
     private Integer day;
+
+    @Column(name="project_name")
     private String projectName;
+
+    @Column(name="granted_point")
     private Long grantedPoint;
 
-    @Column(columnDefinition = "TEXT")
-    private String notes;
+    @Column(name="note",columnDefinition = "TEXT")
+    private String note;
 
+    @Column(name="user_id")
     private Long userId;
+
+    @Column(name="year")
+    private int year;
 
     public void updateGrantedPoint(Long grantedPoint) {
         if (grantedPoint == null || grantedPoint < 0) {

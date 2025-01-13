@@ -14,6 +14,8 @@ import com.blaybus.appsolute.evaluation.domain.entity.Evaluation;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationRepository;
 import com.blaybus.appsolute.level.domain.entity.Level;
 import com.blaybus.appsolute.level.repository.JpaLevelRepository;
+import com.blaybus.appsolute.project.domain.entity.Project;
+import com.blaybus.appsolute.project.repository.JpaProjectRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.domain.request.*;
 import com.blaybus.appsolute.user.domain.response.LoginUserResponse;
@@ -47,6 +49,7 @@ public class UserService {
     private final JpaDepartmentGroupRepository departmentGroupRepository;
     private final JpaLevelRepository levelRepository;
     private final JpaDepartmentGroupQuestRepository departmentGroupQuestRepository;
+    private final JpaProjectRepository jpaProjectRepository;
     private final UserSheetService userSheetService;
     private final JWTUtil jwtUtil;
 
@@ -93,6 +96,8 @@ public class UserService {
         List<Xp> xpList = xpRepository.findByUser_Id(id);
         List<Evaluation> evaluationList = evaluationRepository.findByUser(user);
         List<DepartmentGroupQuest> departmentGroupQuestList = departmentGroupQuestRepository.findByDepartmentGroup(user.getDepartmentGroup());
+        List<Project> projectList=jpaProjectRepository.findByUserId(id);
+
 
         long lastYearXpPoint = 0;
 
@@ -116,9 +121,14 @@ public class UserService {
                 .filter(departmentGroupQuest -> departmentGroupQuest.getYear() == now.getYear())
                 .toList();
 
+        List<Project> thisYearProject = projectList.stream()
+                .filter(project -> project.getYear()==now.getYear())
+                .toList();
+
         long thisYearTotalXpPoint = 0;
         long thisYearEvaluationXpPoint = 0;
         long thisYearDepartmentGroupQuestXpPoint = 0;
+        long thisYearProjectXpPoint = 0;
 
         for(Evaluation evaluation : thisYearEvaluation) {
             thisYearEvaluationXpPoint += evaluation.getEvaluationGrade().getEvaluationGradePoint();
@@ -132,7 +142,11 @@ public class UserService {
             }
         }
 
-        thisYearTotalXpPoint += thisYearEvaluationXpPoint + thisYearDepartmentGroupQuestXpPoint;
+        for(Project thisProject : projectList) {
+            thisYearProjectXpPoint += thisProject.getGrantedPoint();
+        }
+
+        thisYearTotalXpPoint += thisYearEvaluationXpPoint + thisYearDepartmentGroupQuestXpPoint + thisYearProjectXpPoint;
         long totalXP = lastYearXpPoint + thisYearTotalXpPoint;
         Level tempLevel = user.getLevel();
         long remainXP = tempLevel.getMaxPoint() + 1 - totalXP;
@@ -150,7 +164,8 @@ public class UserService {
         }
 
 
-        return ReadUserResponse.from(user, lastYearXpPoint, thisYearTotalXpPoint, remainXP, thisYearEvaluationXpPoint, thisYearDepartmentGroupQuestXpPoint, isLastLevel, totalXP);
+        return ReadUserResponse.from(user, lastYearXpPoint, thisYearTotalXpPoint, remainXP, thisYearEvaluationXpPoint
+                , thisYearDepartmentGroupQuestXpPoint, thisYearProjectXpPoint, isLastLevel, totalXP);
     }
 
     public void updatePassword(Long id, UpdatePasswordRequest request) {

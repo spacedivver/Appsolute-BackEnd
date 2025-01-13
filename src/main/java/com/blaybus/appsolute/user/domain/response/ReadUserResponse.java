@@ -21,10 +21,11 @@ public record ReadUserResponse(
         Long nextLevelRemainXP,
         Long thisEvaluationXP,
         Long thisDepartmentGroupXP,
+        Long thisProjectXP,
         boolean isLastLevel,
         Long totalXP
 ) {
-    public static ReadUserResponse from(User user, Long lastYearXP, Long thisYearXP, Long nextLevelRemainXP, Long thisEvaluationXP, Long thisDepartmentGroupXP, boolean isLastLevel, Long totalXP) {
+    public static ReadUserResponse from(User user, Long lastYearXP, Long thisYearXP, Long nextLevelRemainXP, Long thisEvaluationXP, Long thisDepartmentGroupXP, Long thisProjectXP, boolean isLastLevel, Long totalXP) {
         return ReadUserResponse.builder()
                 .employeeNumber(user.getEmployeeNumber())
                 .userName(user.getUserName())
@@ -40,6 +41,7 @@ public record ReadUserResponse(
                 .nextLevelRemainXP(nextLevelRemainXP)
                 .thisEvaluationXP(thisEvaluationXP)
                 .thisDepartmentGroupXP(thisDepartmentGroupXP)
+                .thisProjectXP(thisProjectXP)
                 .isLastLevel(isLastLevel)
                 .totalXP(totalXP)
                 .build();
