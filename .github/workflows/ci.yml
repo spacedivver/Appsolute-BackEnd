@@ -21,24 +21,22 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Generate JSON file
+      - name: set up application.properties
+        run: echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
+
+      - name: Generate FCM JSON file
         env:
           FIREBASE_JSON: ${{ secrets.FIREBASE }}
         run: |
-            mkdir -p src/main/resources/key
-            echo ${FIREBASE_JSON} > src/main/resources/firebase/blaybus-appsolute-firebase-adminsdk.json
+          mkdir -p src/main/resources/firebase
+          echo ${FIREBASE_JSON} > src/main/resources/firebase/blaybus-appsolute-firebase-adminsdk.json
 
-      - name: Generate GOOGLE KEY file
+      - name: Generate GOOGLESHEET JSON file
         env:
           GOOGLESHEET: ${{ secrets.GOOGLESHEET }}
         run: |
-          mkdir -p src/main/resources/key
+          mkdir -p src/main/resources/googlesheet
           echo ${GOOGLESHEET} > src/main/resources/googlesheet/google-account-key.json
-
-      - name: Generate application.properties file
-        run: |
-            mkdir -p src/main/resources
-            echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
 
       - name: Grant execute permission for Gradle Wrapper
         run: chmod +x ./gradlew
