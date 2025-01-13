@@ -19,7 +19,7 @@ public class ProjectResponse {
         response.setDay(project.getDay());
         response.setProjectName(project.getProjectName());
         response.setGrantedPoint(project.getGrantedPoint());
-        response.setNotes(project.getNotes());
+        response.setNotes(project.getNote());
         return response;
     }
 }

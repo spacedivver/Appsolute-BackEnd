@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,22 +31,6 @@ public class ProjectService {
     private final FcmTokenService tokenService;
     private final MessageService messageService;
 
-    public void saveProject(ProjectRequest projectRequest) {
-
-        User user = userRepository.findByEmployeeNumber(projectRequest.getEmployeeNumber())
-                .orElseThrow(() -> new IllegalArgumentException("해당 사옹자가 없습니다."));
-
-        Project project = new Project();
-        project.setMonth(projectRequest.getMonth());
-        project.setDay(projectRequest.getDay());
-        project.setProjectName(projectRequest.getProjectName());
-        project.setGrantedPoint(projectRequest.getGrantedPoint());
-        project.setNotes(projectRequest.getNotes());
-        project.setUserId(user.getId());
-
-        jpaProjectRepository.save(project);
-    }
-
     public List<ProjectResponse> getProjectByUser(Long userId) {
         return jpaProjectRepository.findByUserId(userId).stream()
                 .map(ProjectResponse::fromEntity)
@@ -53,7 +38,7 @@ public class ProjectService {
     }
 
 
-    public void updateProjectXP(ProjectRequest projectRequest) {
+    public void updateProject(ProjectRequest projectRequest) {
 
         User user = userRepository.findByEmployeeNumber(projectRequest.getEmployeeNumber())
                 .orElseThrow(() -> new ApplicationException(
@@ -61,9 +46,19 @@ public class ProjectService {
                 ));
 
         Project project = jpaProjectRepository.findByUserIdAndProjectName(user.getId(), projectRequest.getProjectName())
-                .orElseThrow(() -> new ApplicationException(
-                        ErrorStatus.toErrorStatus("조건에 맞는 프로젝트가 없습니다.", 404, LocalDateTime.now())
-                ));
+                .orElse(null);
+
+        if(project == null) {
+            project = Project.builder()
+                    .userId(user.getId())
+                    .month(projectRequest.getMonth())
+                    .day(projectRequest.getDay())
+                    .projectName(projectRequest.getProjectName())
+                    .grantedPoint(0L)
+                    .note(projectRequest.getNotes())
+                    .year(LocalDate.now().getYear())
+                    .build();
+        }
 
         project.updateGrantedPoint(projectRequest.getGrantedPoint());
 
