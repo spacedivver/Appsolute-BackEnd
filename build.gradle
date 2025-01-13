@@ -61,10 +61,8 @@ dependencies {
 }
 
 processResources {
-    processResources {
-        from('src/main/resources') {
-            include '**/*.json'
-        }
+    from('src/main/resources') {
+        include '**/*.json'
     }
 }
 
