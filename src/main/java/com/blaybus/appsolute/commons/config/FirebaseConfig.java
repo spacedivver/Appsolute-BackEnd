@@ -16,7 +16,7 @@ public class FirebaseConfig {
     public FirebaseApp initializeFirebase() throws IOException {
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(
-                        "/firebase/blaybus-appsolute-firebase-adminsdk.json").getInputStream())
+                        "/blaybus-appsolute-firebase-adminsdk.json").getInputStream())
                 .createScoped(Arrays.asList("https://www.googleapis.com/auth/cloud-platform"));
 
         FirebaseOptions options = new FirebaseOptions.Builder()
