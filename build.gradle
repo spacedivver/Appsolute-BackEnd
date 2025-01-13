@@ -62,8 +62,10 @@ dependencies {
 
 processResources {
     from('src/main/resources') {
-        include '**/*.json'
+        include '**/blaybus-appsolute-firebase-adminsdk.json'
+        include '**/google-account-key.json'
     }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.named('test') {
