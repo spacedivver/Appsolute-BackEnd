@@ -24,26 +24,27 @@ jobs:
       - name: create resources folder if not exists
         run: mkdir -p src/main/resources
 
-      - name: set up application.properties
-        run: echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
-
-      - name: Generate FCM JSON file
+      - name: Generate JSON file
         env:
-          FIREBASE_JSON: ${{ secrets.FIREBASE }}
+          FIREBASE: ${{ secrets.FIREBASE }}
         run: |
-          echo ${FIREBASE_JSON} > src/main/resources/blaybus-appsolute-firebase-adminsdk.json
+          echo ${FIREBASE} > src/main/resources/blaybus-appsolute-firebase-adminsdk.json
 
-      - name: Generate GOOGLESHEET JSON file
+      - name: Generate SHEET JSON file
         env:
-          GOOGLESHEET: ${{ secrets.GOOGLESHEET }}
+          SHEET: ${{ secrets.GOOGLESHEET }}
         run: |
-          echo ${GOOGLESHEET} > src/main/resources/google-account-key.json
+          echo ${SHEET} > src/main/resources/google-account-key.json
+
+      - name: Generate application.properties file
+        run: |
+          echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
 
       - name: Verify FCM JSON file
         run: |
           ls -l src/main/resources/blaybus-appsolute-firebase-adminsdk.json
 
-      - name: Verify GOOGLESHEET JSON file
+      - name: Verify SHEET JSON file
         run: |
           ls -l src/main/resources/google-account-key.json
 
