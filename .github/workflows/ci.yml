@@ -21,6 +21,9 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      - name: create resources folder if not exists
+        run: mkdir -p src/main/resources
+
       - name: set up application.properties
         run: echo "${{ secrets.APPLICATION }}" > src/main/resources/application.properties
 
