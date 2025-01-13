@@ -61,12 +61,10 @@ dependencies {
 }
 
 processResources {
-    from('src/main/resources/firebase') {
-        include '**/*.json'
-    }
-
-    from('src/main/resources/googlesheet') {
-        include '**/*.json'
+    processResources {
+        from('src/main/resources') {
+            include '**/*.json'
+        }
     }
 }
 
