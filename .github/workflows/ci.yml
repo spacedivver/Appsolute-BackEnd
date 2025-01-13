@@ -39,6 +39,14 @@ jobs:
         run: |
           echo ${GOOGLESHEET} > src/main/resources/google-account-key.json
 
+      - name: Verify FCM JSON file
+        run: |
+          ls -l src/main/resources/blaybus-appsolute-firebase-adminsdk.json
+
+      - name: Verify GOOGLESHEET JSON file
+        run: |
+          ls -l src/main/resources/google-account-key.json
+
       - name: Grant execute permission for Gradle Wrapper
         run: chmod +x ./gradlew
 
