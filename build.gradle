@@ -60,6 +60,16 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+processResources {
+    from('src/main/resources/firebase') {
+        include '**/*.json'
+    }
+
+    from('src/main/resources/googlesheet') {
+        include '**/*.json'
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
