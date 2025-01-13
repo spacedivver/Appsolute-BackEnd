@@ -18,7 +18,7 @@ public class GoogleSheetConfig {
     @Bean
     public Sheets googleSheet() throws IOException {
         GoogleCredentials credentials = GoogleCredentials.fromStream(
-                        new FileInputStream("src/main/resources/googlesheet/google-account-key.json"))
+                        new FileInputStream("src/main/resources/google-account-key.json"))
                 .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS));
 
         return new Sheets.Builder(
