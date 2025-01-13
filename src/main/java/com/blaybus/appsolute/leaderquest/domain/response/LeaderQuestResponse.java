@@ -12,8 +12,7 @@ public class LeaderQuestResponse {
     private String maxThreshold;
     private String mediumThreshold;
     private String questStatus;
-    private String actualPoint;
+    private String grantedPoint;
     private long mediumPoint;
     private long maxPoint;
-    private String year;
 }

@@ -10,10 +10,10 @@ public class LeQuestBoardRequest {
 
     private Long userId;
     private Long leaderQuestId;
-    private Long actualPoint;
+    private Long month;
+    private Long grantedPoint;
     public LeQuestBoard.QuestStatus questStatus;
     private String employeeNumber;
     private String leaderQuestName;
-    private Long month;
 
 }
