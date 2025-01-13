@@ -1,4 +1,4 @@
-INSERT INTO level (level_name, level_achievement, max_point)
+INSERT INTO LEVEL (level_name, level_achievement, max_point)
 VALUES
     ('F1-Ⅰ', 0, 13499),
     ('F1-Ⅱ', 13500, 26999),
@@ -13,8 +13,8 @@ VALUES
     ('F4-Ⅲ', 144000, 161999),
     ('F5', 162000, 9223372036854775807);
 
-UPDATE level l1
-    JOIN level l2 ON l2.level_name = CASE
+UPDATE LEVEL l1
+    JOIN LEVEL l2 ON l2.level_name = CASE
                                          WHEN l1.level_name = 'F1-Ⅰ' THEN 'F1-Ⅱ'
                                          WHEN l1.level_name = 'F1-Ⅱ' THEN 'F2-Ⅰ'
                                          WHEN l1.level_name = 'F2-Ⅰ' THEN 'F2-Ⅱ'
@@ -34,7 +34,7 @@ WHERE l1.level_name IN (
                         'F3-Ⅰ', 'F3-Ⅱ', 'F3-Ⅲ', 'F4-Ⅰ', 'F4-Ⅱ', 'F4-Ⅲ'
     );
 
-INSERT INTO level (level_name, level_achievement, max_point)
+INSERT INTO LEVEL (level_name, level_achievement, max_point)
 VALUES
     ('B1', 0, 24000),
     ('B2', 24000, 52000),
@@ -43,8 +43,8 @@ VALUES
     ('B5', 117000, 169000),
     ('B6', 169000, 9223372036854775807);
 
-UPDATE level l1
-    JOIN level l2 ON l2.level_name = CASE
+UPDATE LEVEL l1
+    JOIN LEVEL l2 ON l2.level_name = CASE
                                          WHEN l1.level_name = 'B1' THEN 'B2'
                                          WHEN l1.level_name = 'B2' THEN 'B3'
                                          WHEN l1.level_name = 'B3' THEN 'B4'
@@ -55,7 +55,7 @@ UPDATE level l1
 SET l1.next_level_id = l2.level_id
 WHERE l1.level_name IN ('B1', 'B2', 'B3', 'B4', 'B5');
 
-INSERT INTO level (level_name, level_achievement, max_point)
+INSERT INTO LEVEL (level_name, level_achievement, max_point)
 VALUES
     ('G1', 0, 24000),
     ('G2', 24000, 52000),
@@ -64,8 +64,8 @@ VALUES
     ('G5', 117000, 169000),
     ('G6', 169000, 9223372036854775807);
 
-UPDATE level l1
-    JOIN level l2 ON l2.level_name = CASE
+UPDATE LEVEL l1
+    JOIN LEVEL l2 ON l2.level_name = CASE
                                          WHEN l1.level_name = 'G1' THEN 'G2'
                                          WHEN l1.level_name = 'G2' THEN 'G3'
                                          WHEN l1.level_name = 'G3' THEN 'G4'
