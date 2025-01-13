@@ -100,14 +100,6 @@ public class UserService {
                 .filter(xp -> xp.getYear() <= now.getYear() -1)
                 .toList();
 
-//        List<Evaluation> lastYearEvaluation = evaluationList.stream()
-//                .filter(evaluation -> evaluation.getYear() <= now.getYear() -1)
-//                .toList();
-//
-//        List<DepartmentGroupQuest> lastYearDepartmentGroupQuest = departmentGroupQuestList.stream()
-//                .filter(departmentGroupQuest -> departmentGroupQuest.getYear() <= now.getYear() -1)
-//                .toList();
-
         for(Xp xp : lastYearXp) {
             List<XpDetail> xpDetailList = xpDetailRepository.findByXp(xp);
 
@@ -115,29 +107,6 @@ public class UserService {
                 lastYearXpPoint += xpDetail.getPoint();
             }
         }
-
-//        long lastEvaluationPoint = 0;
-//
-//        for(Evaluation lastEvaluation : lastYearEvaluation) {
-//            lastEvaluationPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
-//        }
-//
-//        long lastDepartmentGroupQuestPoint = 0;
-//
-//        for(DepartmentGroupQuest lastDepartmentGroupQuest : lastYearDepartmentGroupQuest) {
-//            if(lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
-//                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMediumPoint();
-//            } else if (lastDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
-//                lastDepartmentGroupQuestPoint += lastDepartmentGroupQuest.getMaxPoint();
-//            }
-//        }
-
-//        lastYearXpPoint += lastEvaluationPoint + lastDepartmentGroupQuestPoint;
-
-        Xp thisYearXp = xpList.stream()
-                .filter(xp -> xp.getYear() == now.getYear())
-                .findFirst()
-                .orElse(null);
 
         List<Evaluation> thisYearEvaluation = evaluationList.stream()
                 .filter(evaluation -> evaluation.getYear() == now.getYear())
@@ -147,37 +116,41 @@ public class UserService {
                 .filter(departmentGroupQuest -> departmentGroupQuest.getYear() == now.getYear())
                 .toList();
 
-        long thisYearXpPoint = 0;
-
-        if(thisYearXp != null) {
-            List<XpDetail> xpDetailList = xpDetailRepository.findByXp(thisYearXp);
-
-            for(XpDetail xpDetail : xpDetailList) {
-                thisYearXpPoint += xpDetail.getPoint();
-            }
-        }
-
-        long thisYearEvaluationPoint = 0;
+        long thisYearTotalXpPoint = 0;
+        long thisYearEvaluationXpPoint = 0;
+        long thisYearDepartmentGroupQuestXpPoint = 0;
 
         for(Evaluation evaluation : thisYearEvaluation) {
-            thisYearEvaluationPoint += evaluation.getEvaluationGrade().getEvaluationGradePoint();
+            thisYearEvaluationXpPoint += evaluation.getEvaluationGrade().getEvaluationGradePoint();
         }
-
-        long thisYearDepartmentGroupQuestPoint = 0;
 
         for(DepartmentGroupQuest thisDepartmentGroupQuest : thisYearDepartmentGroupQuest) {
             if(thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
-                thisYearDepartmentGroupQuestPoint += thisDepartmentGroupQuest.getMediumPoint();
+                thisYearDepartmentGroupQuestXpPoint += thisDepartmentGroupQuest.getMediumPoint();
             } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
-                thisYearDepartmentGroupQuestPoint += thisDepartmentGroupQuest.getMaxPoint();
+                thisYearDepartmentGroupQuestXpPoint += thisDepartmentGroupQuest.getMaxPoint();
             }
         }
 
-        thisYearXpPoint += thisYearEvaluationPoint + thisYearDepartmentGroupQuestPoint;
+        thisYearTotalXpPoint += thisYearEvaluationXpPoint + thisYearDepartmentGroupQuestXpPoint;
+        long totalXP = lastYearXpPoint + thisYearTotalXpPoint;
+        Level tempLevel = user.getLevel();
+        long remainXP = tempLevel.getMaxPoint() + 1 - totalXP;
+        boolean isLastLevel = false;
 
-        long nextLevelRemainXP = Math.max(user.getLevel().getMaxPoint() - (lastYearXpPoint + thisYearXpPoint) + 1, 0);
+        //(레벨 최대 경험치+1) - 지금까지 얻은 총 경험치 = 남은 경험치
+        while((tempLevel.getMaxPoint() + 1) <= totalXP) {
+            tempLevel = tempLevel.getNextLevel();
+            remainXP = tempLevel.getMaxPoint() + 1 - totalXP;
+        }
 
-        return ReadUserResponse.from(user, lastYearXpPoint, thisYearXpPoint, nextLevelRemainXP, thisYearEvaluationPoint, thisYearDepartmentGroupQuestPoint);
+        if(tempLevel.getNextLevel() == null) {
+            remainXP = 0;
+            isLastLevel = true;
+        }
+
+
+        return ReadUserResponse.from(user, lastYearXpPoint, thisYearTotalXpPoint, remainXP, thisYearEvaluationXpPoint, thisYearDepartmentGroupQuestXpPoint, isLastLevel, totalXP);
     }
 
     public void updatePassword(Long id, UpdatePasswordRequest request) {
