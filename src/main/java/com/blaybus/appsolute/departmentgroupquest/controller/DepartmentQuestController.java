@@ -2,6 +2,7 @@ package com.blaybus.appsolute.departmentgroupquest.controller;
 
 import com.blaybus.appsolute.commons.annotation.Authenticated;
 import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartmentGroupQuestRequest;
+import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartQuestDetailResponse;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentGroupQuestResponse;
 import com.blaybus.appsolute.departmentgroupquest.service.DepartmentGroupQuestService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,5 +48,17 @@ public class DepartmentQuestController {
     public ResponseEntity<Void> createOrUpdateDepartmentQuest(UpdateDepartmentGroupQuestRequest request) {
         departmentGroupQuestService.createOrUpdateXP(request);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "직무 퀘스트 id값으로 상세 정보를 불러옵니다.", description = "직무 퀘스트 id값으로 상세 정보를 불러옵니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공" , content = @Content(schema = @Schema(implementation = ReadDepartQuestDetailResponse.class))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content),
+            @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
+    })
+    @Authenticated
+    @GetMapping("/{departmentQuestId}")
+    public ResponseEntity<ReadDepartQuestDetailResponse> getDepartmentQuestDetail(@PathVariable("departmentQuestId") Long departmentQuestId) {
+        return ResponseEntity.ok(departmentGroupQuestService.getDepartmentDetailById(departmentQuestId));
     }
 }

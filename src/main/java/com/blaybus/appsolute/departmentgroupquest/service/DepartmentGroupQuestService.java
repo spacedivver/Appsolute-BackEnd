@@ -5,11 +5,15 @@ import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
 import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
 import com.blaybus.appsolute.departmentgroup.repository.JpaDepartmentGroupRepository;
 import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentGroupQuest;
+import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentQuestDetail;
 import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartmentGroupQuestRequest;
+import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartQuestDetailResponse;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentGroupQuestResponse;
+import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentQuestDetailResponse;
 import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestStatusType;
 import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestType;
 import com.blaybus.appsolute.departmentgroupquest.repository.JpaDepartmentGroupQuestRepository;
+import com.blaybus.appsolute.departmentgroupquest.repository.JpaDepartmentQuestDetailRepository;
 import com.blaybus.appsolute.fcm.domain.response.ReadFcmTokenResponse;
 import com.blaybus.appsolute.fcm.service.FcmTokenService;
 import com.blaybus.appsolute.fcm.service.MessageService;
@@ -34,6 +38,7 @@ public class DepartmentGroupQuestService {
 
     private final JpaDepartmentGroupQuestRepository departmentGroupQuestRepository;
     private final JpaDepartmentGroupRepository departmentGroupRepository;
+    private final JpaDepartmentQuestDetailRepository departmentQuestDetailRepository;
     private final JpaUserRepository userRepository;
     private final FcmTokenService tokenService;
     private final MessageService messageService;
@@ -154,6 +159,27 @@ public class DepartmentGroupQuestService {
                     .findFirst()
                     .orElse(null);
         }
+    }
+
+    public ReadDepartQuestDetailResponse getDepartmentDetailById(Long departmentGroupQuestId) {
+
+        DepartmentGroupQuest departmentGroupQuest = departmentGroupQuestRepository.findById(departmentGroupQuestId)
+                .orElseThrow(() -> new ApplicationException(
+                        ErrorStatus.toErrorStatus("해당하는 직무별 퀘스트가 없습니다.", 404, LocalDateTime.now())
+                ));
+
+        long gainedXP = 0;
+
+        if(departmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
+            gainedXP = departmentGroupQuest.getMaxPoint();
+        } else if(departmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.ONGOING) {
+            gainedXP = departmentGroupQuest.getMediumPoint();
+        }
+
+        List<ReadDepartmentQuestDetailResponse> departmentQuestDetailList = departmentQuestDetailRepository.findByDepartmentGroupQuest(departmentGroupQuest)
+                .stream().map(ReadDepartmentQuestDetailResponse::fromEntity).toList();
+
+        return ReadDepartQuestDetailResponse.from(departmentQuestDetailList, gainedXP, departmentGroupQuest);
     }
 
     @Scheduled(cron = "0 0 4 * * 1")
