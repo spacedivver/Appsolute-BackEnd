@@ -16,35 +16,37 @@ public class LeaderQuest {
     @Column(name = "leader_quest_id")
     private Long leaderQuestId;
 
-    @Column(name = "leader_quest_name", nullable = false)
+    @Column(name = "leader_quest_name")
     private String leaderQuestName;
 
     public enum LeaderQuestType {
         WEEKLY, MONTHLY
     }
 
-    @Column(name = "quest_type", nullable = false)
+    @Column(name = "quest_type")
     @Enumerated(EnumType.STRING)
     private LeaderQuestType leaderQuestType;
 
-    @Column(name = "max_threshold", nullable = false)
-    private String maxThreshold;
+    @Column(name="rate")
+    private String rate;
 
-    @Column(name = "medium_threshold", nullable = false)
-    private String mediumThreshold;
+    @Column(name="total_quest_point")
+    private Long totalQuestPoint;
 
-    @Column(name = "medium_point", nullable = false)
-    private Long mediumPoint;
-
-    @Column(name = "max_point", nullable = false)
+    @Column(name = "max_point")
     private Long maxPoint;
 
-    @Column(name="point", nullable = false)
-    private Long point;
+    @Column(name = "medium_point")
+    private Long mediumPoint;
 
-    @Column(name="notes", nullable = false)
-    private String notes;
+    @Column(name = "max_threshold")
+    private String maxThreshold;
 
-    @Column(name="rate", nullable = false)
-    private String rate;
+    @Column(name = "medium_threshold")
+    private String mediumThreshold;
+
+    @Column(name="note")
+    private String note;
+
+
 }

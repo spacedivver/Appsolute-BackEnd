@@ -31,7 +31,7 @@ public class LeaderQuestController {
     }
 
     @Operation(summary = "리더 퀘스트 전체 정보를 조회")
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<LeaderQuest>> getLeaderQuest() {
         try {
             List<LeaderQuest> result = leaderQuestService.getLeaderQuest();
