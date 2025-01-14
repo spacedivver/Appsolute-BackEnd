@@ -10,7 +10,7 @@ public class ProjectResponse {
     private Integer day;
     private String projectName;
     private Long grantedPoint;
-    private String notes;
+    private String note;
 
     public static ProjectResponse fromEntity(Project project) {
         ProjectResponse response = new ProjectResponse();
@@ -19,7 +19,7 @@ public class ProjectResponse {
         response.setDay(project.getDay());
         response.setProjectName(project.getProjectName());
         response.setGrantedPoint(project.getGrantedPoint());
-        response.setNotes(project.getNote());
+        response.setNote(project.getNote());
         return response;
     }
 }

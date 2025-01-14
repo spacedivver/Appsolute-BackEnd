@@ -10,6 +10,6 @@ public class ProjectRequest {
     private String employeeNumber;
     private String projectName;
     private Long grantedPoint;
-    private String notes;
+    private String note;
 
 }
