@@ -35,20 +35,25 @@ public class XpService {
 
         long xpPoint = Long.parseLong(request.xp());
 
-        Xp xp = Xp.builder()
-                .user(user)
-                .year(request.year())
-                .build();
+        Xp xp = xpRepository.findByUserAndYear(user, request.year())
+                .orElseGet( () -> xpRepository.save(
+                                 Xp.builder()
+                                        .user(user)
+                                        .year(request.year())
+                                        .build()
+                        )
+                );
 
-        xpRepository.save(xp);
+        XpDetail xpDetail = xpDetailRepository.findByXp(xp)
+                .orElseGet(() -> xpDetailRepository.save(
+                        XpDetail.builder()
+                                .point(xpPoint)
+                                .createdAt(LocalDateTime.of(request.year(), 1, 1, 0, 0))
+                                .xp(xp)
+                                .build()
+                ));
 
-        XpDetail xpDetail = XpDetail.builder()
-                .point(xpPoint)
-                .createdAt(LocalDateTime.of(request.year(), 1, 1, 0, 0))
-                .xp(xp)
-                .build();
-
-        xpDetailRepository.save(xpDetail);
+        xpDetail.updatePoint(xpPoint);
     }
 
     public void updateYearXp(UpdateXpRequest request) {
@@ -65,15 +70,12 @@ public class XpService {
                                 ErrorStatus.toErrorStatus("해당하는 경험치가 없습니다.", 404, LocalDateTime.now())
                         ));
 
-        xpDetailRepository.deleteByXp(xp);
+        XpDetail xpDetail = xpDetailRepository.findByXp(xp)
+                .orElseThrow(() -> new ApplicationException(
+                        ErrorStatus.toErrorStatus("해당하는 xp가 없습니다.", 404, LocalDateTime.now())
+                ));
 
-        XpDetail xpDetail = XpDetail.builder()
-                .point(xpPoint)
-                .createdAt(LocalDateTime.of(request.year(), 1, 1, 0, 0))
-                .xp(xp)
-                .build();
-
-        xpDetailRepository.save(xpDetail);
+        xpDetail.updatePoint(xpPoint);
     }
 
     public void deleteYearXp(DeleteXpRequest request) {

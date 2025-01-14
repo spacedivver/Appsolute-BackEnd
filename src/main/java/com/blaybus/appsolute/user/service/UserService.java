@@ -110,9 +110,10 @@ public class UserService {
                 .toList();
 
         for(Xp xp : lastYearXp) {
-            List<XpDetail> xpDetailList = xpDetailRepository.findByXp(xp);
+            XpDetail xpDetail = xpDetailRepository.findByXp(xp)
+                    .orElse(null);
 
-            for(XpDetail xpDetail : xpDetailList) {
+            if(xpDetail != null) {
                 lastYearXpPoint += xpDetail.getPoint();
             }
         }
@@ -301,9 +302,10 @@ public class UserService {
                     .toList();
 
             for(Xp xp : lastYearXp) {
-                List<XpDetail> xpDetailList = xpDetailRepository.findByXp(xp);
+                XpDetail xpDetail = xpDetailRepository.findByXp(xp)
+                        .orElse(null);
 
-                for(XpDetail xpDetail : xpDetailList) {
+                if(xpDetail != null) {
                     lastYearXpPoint += xpDetail.getPoint();
                 }
             }

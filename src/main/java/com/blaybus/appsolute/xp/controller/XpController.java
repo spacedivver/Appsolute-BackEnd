@@ -21,11 +21,11 @@ public class XpController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/year")
-    public ResponseEntity<Void> updateYearXp(@RequestBody UpdateXpRequest request) {
-        xpService.updateYearXp(request);
-        return ResponseEntity.ok().build();
-    }
+//    @PutMapping("/year")
+//    public ResponseEntity<Void> updateYearXp(@RequestBody UpdateXpRequest request) {
+//        xpService.updateYearXp(request);
+//        return ResponseEntity.ok().build();
+//    }
 
     @DeleteMapping("/year")
     public ResponseEntity<Void> deleteYearXp(@RequestBody DeleteXpRequest request) {
