@@ -43,9 +43,7 @@ public class Project {
 
     public void updateGrantedPoint(Long grantedPoint) {
         if (grantedPoint == null || grantedPoint < 0) {
-            throw new ApplicationException(
-                    ErrorStatus.toErrorStatus("유효하지 않은 포인트 값입니다.", 400, LocalDateTime.now())
-            );
+            grantedPoint=0L;
         }
         this.grantedPoint = grantedPoint;
     }
