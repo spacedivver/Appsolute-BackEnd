@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LeaderQuestService {
 
-    private JpaLeaderQuestRepository jpaLeaderQuestRepository;
+    private final JpaLeaderQuestRepository jpaLeaderQuestRepository;
 
     public void saveLeaderQuest(LeaderQuestRequest leaderQuestRequest) {
         LeaderQuest leaderQuest = LeaderQuest.builder()
@@ -36,7 +36,7 @@ public class LeaderQuestService {
         jpaLeaderQuestRepository.save(leaderQuest);
     }
 
-    public List<LeaderQuest> getLeaderQuest() throws IOException {
+    public List<LeaderQuest> getLeaderQuest() {
         return jpaLeaderQuestRepository.findAll();
     }
 

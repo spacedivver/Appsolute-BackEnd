@@ -17,28 +17,20 @@ import java.util.List;
 @Tag(name="리더 퀘스트 정보 api")
 public class LeaderQuestController {
 
-    private LeaderQuestService leaderQuestService;
+    private final LeaderQuestService leaderQuestService;
 
     @Operation(summary = "리더 퀘스트 전체 정보를 저장")
     @PostMapping("/save")
     public ResponseEntity<String> saveLeaderQuest(@RequestBody LeaderQuestRequest leaderQuestRequest) {
-        try {
-            leaderQuestService.saveLeaderQuest(leaderQuestRequest);
-            return ResponseEntity.ok("성공적으로 저장되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("서버 에러 " + e.getMessage());
-        }
+        leaderQuestService.saveLeaderQuest(leaderQuestRequest);
+        return ResponseEntity.ok("성공적으로 저장되었습니다.");
     }
 
     @Operation(summary = "리더 퀘스트 전체 정보를 조회")
     @GetMapping("")
     public ResponseEntity<List<LeaderQuest>> getLeaderQuest() {
-        try {
-            List<LeaderQuest> result = leaderQuestService.getLeaderQuest();
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+        List<LeaderQuest> result = leaderQuestService.getLeaderQuest();
+        return ResponseEntity.ok(result);
     }
 
 }
