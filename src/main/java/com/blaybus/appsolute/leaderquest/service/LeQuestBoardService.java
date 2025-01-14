@@ -9,6 +9,7 @@ import com.blaybus.appsolute.fcm.service.MessageService;
 import com.blaybus.appsolute.leaderquest.domain.entity.LeQuestBoard;
 import com.blaybus.appsolute.leaderquest.domain.entity.LeaderQuest;
 import com.blaybus.appsolute.leaderquest.domain.request.LeQuestBoardRequest;
+import com.blaybus.appsolute.leaderquest.domain.response.LeQuestBoardResponse;
 import com.blaybus.appsolute.leaderquest.repository.JpaLeQuestBoardRepository;
 import com.blaybus.appsolute.leaderquest.repository.JpaLeaderQuestRepository;
 import com.blaybus.appsolute.user.domain.entity.User;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +36,24 @@ public class LeQuestBoardService {
     private final FcmTokenService tokenService;
     private final MessageService messageService;
 
-    public List<LeQuestBoard> getLeQuestBoard(Long userId, Long month) {
-        return leQuestBoardRepository.findByUserIdAndMonth(userId, month);
+    public List<LeQuestBoardResponse> getLeQuestBoard(Long userId, Long month) {
+        List<LeQuestBoard> leQuestBoards = leQuestBoardRepository.findByUserIdAndMonth(userId, month);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApplicationException(
+                        ErrorStatus.toErrorStatus("해당 사용자가 없습니다.", 404, LocalDateTime.now())
+                ));
+
+        return leQuestBoards.stream()
+                .map(leQuestBoard -> LeQuestBoardResponse.builder()
+                        .employeeName(user.getUserName())
+                        .month(leQuestBoard.getMonth())
+                        .questStatus(leQuestBoard.getQuestStatus())
+                        .grantedPoint(leQuestBoard.getGrantedPoint())
+                        .note(leQuestBoard.getNote())
+                        .year(leQuestBoard.getYear())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public void updateLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
