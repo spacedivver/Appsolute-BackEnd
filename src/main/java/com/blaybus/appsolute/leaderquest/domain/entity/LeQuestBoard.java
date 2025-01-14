@@ -39,6 +39,9 @@ public class LeQuestBoard {
     @Column(name="note")
     private String note;
 
+    @Column(name="year")
+    private int year;
+
     public void updateGrantedPoint(Long grantedPoint) {
         if (grantedPoint == null || grantedPoint < 0) {
             throw new IllegalArgumentException("유효하지 않은 경험치 값입니다.");
@@ -52,5 +55,17 @@ public class LeQuestBoard {
         } else if (grantedPoint >= 50) {
             this.questStatus = QuestStatus.COMPLETED;
         }
+    }
+
+    public void updateLeaderQuestId(Long leaderQuestId) {
+        this.leaderQuestId = leaderQuestId;
+    }
+
+    public void updateQuestStatus(QuestStatus questStatus) {
+        this.questStatus = questStatus;
+    }
+
+    public void updateNote(String note) {
+        this.note = note;
     }
 }

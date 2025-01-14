@@ -55,12 +55,16 @@ public class ProjectService {
                     .day(projectRequest.getDay())
                     .projectName(projectRequest.getProjectName())
                     .grantedPoint(0L)
-                    .note(projectRequest.getNotes())
+                    .note(projectRequest.getNote())
                     .year(LocalDate.now().getYear())
                     .build();
         }
 
         project.updateGrantedPoint(projectRequest.getGrantedPoint());
+        project.updateMonth(projectRequest.getMonth());
+        project.updateDay(projectRequest.getDay());
+        project.updateProjectName(projectRequest.getProjectName());
+        project.updateNote(projectRequest.getNote());
 
         String title = "경험치 획득!";
         String message=project.getMonth()+"월"+project.getDay()+"일"+project.getProjectName()

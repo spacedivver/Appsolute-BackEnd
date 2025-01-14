@@ -21,10 +21,10 @@ public class Project {
     private Long projectId;
 
     @Column(name="month")
-    private Integer month;
+    private int month;
 
     @Column(name="day")
-    private Integer day;
+    private int day;
 
     @Column(name="project_name")
     private String projectName;
@@ -48,5 +48,21 @@ public class Project {
             );
         }
         this.grantedPoint = grantedPoint;
+    }
+
+    public void updateMonth(int month) {
+        this.month = month;
+    }
+
+    public void updateDay(int day) {
+        this.day = day;
+    }
+
+    public void updateProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public void updateNote(String note) {
+        this.note = note;
     }
 }

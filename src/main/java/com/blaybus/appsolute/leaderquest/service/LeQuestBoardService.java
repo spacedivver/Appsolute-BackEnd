@@ -60,10 +60,15 @@ public class LeQuestBoardService {
                     .questStatus(LeQuestBoard.QuestStatus.READY)
                     .grantedPoint(0L)
                     .month(leQuestBoardRequest.getMonth())
+                    .year(LocalDateTime.now().getYear())
+                    .note(leQuestBoardRequest.getNote())
                     .build();
         }
 
         leQuestBoard.updateGrantedPoint(leQuestBoardRequest.getGrantedPoint());
+        leQuestBoard.updateLeaderQuestId(leQuestBoardRequest.getLeaderQuestId());
+        leQuestBoard.updateQuestStatus(leQuestBoardRequest.getQuestStatus());
+        leQuestBoard.updateNote(leQuestBoardRequest.getNote());
 
         if(Objects.equals(leQuestBoardRequest.getGrantedPoint(), leaderQuest.getMaxPoint())) {
             leQuestBoard=LeQuestBoard.builder()
