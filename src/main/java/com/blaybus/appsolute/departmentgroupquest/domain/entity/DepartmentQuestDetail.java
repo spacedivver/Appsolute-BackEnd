@@ -44,6 +44,16 @@ public class DepartmentQuestDetail {
     @JoinColumn(name = "department_quest_id")
     private DepartmentGroupQuest departmentGroupQuest;
 
+    public void updateAll(LocalDate departmentQuestDetailDate, Double revenue, Double laborCost, Double designServiceFee, Double employeeSalary, Double retirementBenefit, Double socialInsuranceBenefit) {
+        this.departmentQuestDetailDate = departmentQuestDetailDate;
+        this.revenue = revenue;
+        this.laborCost = laborCost;
+        this.designServiceFee = designServiceFee;
+        this.employeeSalary = employeeSalary;
+        this.retirementBenefit = retirementBenefit;
+        this.socialInsuranceBenefit = socialInsuranceBenefit;
+    }
+
     @Builder
     public DepartmentQuestDetail(Long departmentQuestDetailId, LocalDate departmentQuestDetailDate, Double revenue, Double laborCost, Double designServiceFee, Double employeeSalary, Double retirementBenefit, Double socialInsuranceBenefit, DepartmentGroupQuest departmentGroupQuest) {
         this.departmentQuestDetailId = departmentQuestDetailId;

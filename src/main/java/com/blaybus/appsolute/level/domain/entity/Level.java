@@ -30,6 +30,14 @@ public class Level {
     @JoinColumn(name = "next_level_id")
     private Level nextLevel;
 
+    public void updateMaxPoint(Long maxPoint) {
+        this.maxPoint = maxPoint;
+    }
+
+    public void updateNextLevel(Level nextLevel) {
+        this.nextLevel = nextLevel;
+    }
+
     @Builder
     public Level(Long levelId, String levelName, Long levelAchievement, Long maxPoint, Level nextLevel) {
         this.levelId = levelId;

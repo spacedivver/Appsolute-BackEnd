@@ -61,4 +61,10 @@ public class DepartmentQuestController {
     public ResponseEntity<ReadDepartQuestDetailResponse> getDepartmentQuestDetail(@PathVariable("departmentQuestId") Long departmentQuestId) {
         return ResponseEntity.ok(departmentGroupQuestService.getDepartmentDetailById(departmentQuestId));
     }
+
+    @PostMapping("/sheet-detail")
+    public ResponseEntity<Void> createOrUpdateQuestDetail(@RequestBody UpdateDepartmentGroupQuestRequest request) {
+        departmentGroupQuestService.createOrUpdateXP(request);
+        return ResponseEntity.ok().build();
+    }
 }
