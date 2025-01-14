@@ -76,19 +76,19 @@ public class UserController {
     }
 
     @PostMapping("/sheet-create-update")
-    public ResponseEntity<Void> createOrUpdateUser(CreateUserRequest request) {
+    public ResponseEntity<Void> createOrUpdateUser(@RequestBody CreateUserRequest request) {
         userService.createOrUpdateUser(request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/sheet-delete")
-    public ResponseEntity<Void> deleteUser(DeleteUserRequest request) {
+    public ResponseEntity<Void> deleteUser(@RequestBody DeleteUserRequest request) {
         userService.deleteUser(request);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/sheet-level")
-    public ResponseEntity<Void> changeLevel(UpdateLevelRequest request) {
+    public ResponseEntity<Void> changeLevel(@RequestBody UpdateLevelRequest request) {
         userService.updateLevelParam(request);
         return ResponseEntity.ok().build();
     }
