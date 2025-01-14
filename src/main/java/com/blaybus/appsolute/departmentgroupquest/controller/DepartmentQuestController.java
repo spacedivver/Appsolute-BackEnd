@@ -1,6 +1,7 @@
 package com.blaybus.appsolute.departmentgroupquest.controller;
 
 import com.blaybus.appsolute.commons.annotation.Authenticated;
+import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartQuestDetailRequest;
 import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartmentGroupQuestRequest;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartQuestDetailResponse;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentGroupQuestResponse;
@@ -63,8 +64,8 @@ public class DepartmentQuestController {
     }
 
     @PostMapping("/sheet-detail")
-    public ResponseEntity<Void> createOrUpdateQuestDetail(@RequestBody UpdateDepartmentGroupQuestRequest request) {
-        departmentGroupQuestService.createOrUpdateXP(request);
+    public ResponseEntity<Void> createOrUpdateQuestDetail(@RequestBody UpdateDepartQuestDetailRequest request) {
+        departmentGroupQuestService.createOrUpdateDepartQuestDetail(request);
         return ResponseEntity.ok().build();
     }
 }

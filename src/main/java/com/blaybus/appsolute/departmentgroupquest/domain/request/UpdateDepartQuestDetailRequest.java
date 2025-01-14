@@ -2,14 +2,16 @@ package com.blaybus.appsolute.departmentgroupquest.domain.request;
 
 import com.blaybus.appsolute.departmentgroupquest.domain.type.QuestType;
 
+import java.time.LocalDate;
+
 public record UpdateDepartQuestDetailRequest(
-        String departmentGroupName,
-        String departmentName,
+        String departmentGroup,
+        String department,
         int year,
         int week,
         int month,
         QuestType questType,
-        String date,
+        LocalDate date,
         double revenue,
         double laborCost,
         double designServiceFee,
