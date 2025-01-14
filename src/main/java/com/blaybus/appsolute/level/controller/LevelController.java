@@ -1,12 +1,12 @@
 package com.blaybus.appsolute.level.controller;
 
+import com.blaybus.appsolute.level.domain.request.CreateLevelRequest;
 import com.blaybus.appsolute.level.domain.response.ReadLevelResponse;
 import com.blaybus.appsolute.level.service.LevelService;
+import com.blaybus.appsolute.user.domain.request.UpdateLevelRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +20,11 @@ public class LevelController {
     @GetMapping
     public ResponseEntity<List<ReadLevelResponse>> getAllLevels() {
         return ResponseEntity.ok(levelService.getAllLevels());
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> createLevel(@RequestBody CreateLevelRequest request) {
+        levelService.createLevel(request);
+        return ResponseEntity.noContent().build();
     }
 }

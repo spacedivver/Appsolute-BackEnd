@@ -6,6 +6,7 @@ import com.blaybus.appsolute.departmentgroup.domain.DepartmentGroup;
 import com.blaybus.appsolute.departmentgroup.repository.JpaDepartmentGroupRepository;
 import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentGroupQuest;
 import com.blaybus.appsolute.departmentgroupquest.domain.entity.DepartmentQuestDetail;
+import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartQuestDetailRequest;
 import com.blaybus.appsolute.departmentgroupquest.domain.request.UpdateDepartmentGroupQuestRequest;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartQuestDetailResponse;
 import com.blaybus.appsolute.departmentgroupquest.domain.response.ReadDepartmentGroupQuestResponse;
@@ -24,7 +25,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.WeekFields;
 import java.util.List;
@@ -126,6 +129,51 @@ public class DepartmentGroupQuestService {
                 }
             }
         }
+    }
+
+    public void createOrUpdateDepartQuestDetail(UpdateDepartQuestDetailRequest request) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-M-d");
+
+        DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName(request.departmentName(), request.departmentGroupName())
+                        .orElseThrow(() -> new ApplicationException(
+                                ErrorStatus.toErrorStatus("해당하는 직무 그룹이 없습니다.", 404, LocalDateTime.now())
+                        ));
+
+        DepartmentGroupQuest departmentGroupQuest;
+
+        if(request.questType() == QuestType.WEEKLY) {
+            departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndWeek(departmentGroup, request.year(), request.week())
+                    .orElseThrow(() -> new ApplicationException(
+                            ErrorStatus.toErrorStatus("해당하는 직무 그룹 퀘스트가 없습니다.", 404, LocalDateTime.now())
+                    ));;
+        } else {
+            departmentGroupQuest = departmentGroupQuestRepository.findByDepartmentGroupAndYearAndMonth(departmentGroup, request.year(), request.month())
+                    .orElseThrow(() -> new ApplicationException(
+                            ErrorStatus.toErrorStatus("해당하는 직무 그룹 퀘스트가 없습니다.", 404, LocalDateTime.now())
+                    ));
+        }
+
+        LocalDate date = LocalDate.parse(request.date(), formatter);
+
+        DepartmentQuestDetail departmentQuestDetail = departmentQuestDetailRepository.findByDepartmentGroupQuest(departmentGroupQuest)
+                .stream()
+                .filter(detail -> detail.getDepartmentQuestDetailDate().equals(date))
+                .findAny()
+                .orElseGet(() -> departmentQuestDetailRepository.save(
+                        DepartmentQuestDetail.builder()
+                                .departmentQuestDetailDate(date)
+                                .revenue(request.revenue())
+                                .laborCost(request.laborCost())
+                                .designServiceFee(request.designServiceFee())
+                                .employeeSalary(request.employeeSalary())
+                                .retirementBenefit(request.retirementBenefit())
+                                .socialInsuranceBenefit(request.socialInsuranceBenefit())
+                                .departmentGroupQuest(departmentGroupQuest)
+                                .build()
+                ));
+
+        departmentQuestDetail.updateAll(date, request.revenue(), request.laborCost(), request.designServiceFee(), request.employeeSalary(), request.retirementBenefit(), request.socialInsuranceBenefit());
     }
 
     public ReadDepartmentGroupQuestResponse getDepartmentGroupQuest(Long userId, LocalDateTime date) {

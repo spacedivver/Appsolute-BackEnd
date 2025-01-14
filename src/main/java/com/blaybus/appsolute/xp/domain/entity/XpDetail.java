@@ -28,6 +28,10 @@ public class XpDetail {
     @JoinColumn(name = "xp_id")
     private Xp xp;
 
+    public void updatePoint(Long point) {
+        this.point = point;
+    }
+
     @Builder
     public XpDetail(Long xp_detail_id, LocalDateTime createdAt, Long point, Xp xp) {
         this.xp_detail_id = xp_detail_id;
