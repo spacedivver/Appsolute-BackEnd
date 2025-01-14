@@ -28,7 +28,7 @@ public class LeQuestBoardController {
     }
 
     @Operation(summary = "개인별 리더 퀘스트 현황을 저장")
-    @PutMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity<Void> updateLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
         service.updateLeQuestBoard(leQuestBoardRequest);
         return ResponseEntity.ok().build();
