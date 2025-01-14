@@ -16,19 +16,19 @@ public class XpController {
     private final XpService xpService;
 
     @PostMapping("/year")
-    public ResponseEntity<Void> createYearXp(CreateXpRequest request) {
+    public ResponseEntity<Void> createYearXp(@RequestBody CreateXpRequest request) {
         xpService.createXp(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/year")
-    public ResponseEntity<Void> updateYearXp(UpdateXpRequest request) {
+    public ResponseEntity<Void> updateYearXp(@RequestBody UpdateXpRequest request) {
         xpService.updateYearXp(request);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/year")
-    public ResponseEntity<Void> deleteYearXp(DeleteXpRequest request) {
+    public ResponseEntity<Void> deleteYearXp(@RequestBody DeleteXpRequest request) {
         xpService.deleteYearXp(request);
         return ResponseEntity.ok().build();
     }
