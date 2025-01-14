@@ -57,7 +57,7 @@ public class EvaluationService {
                         ErrorStatus.toErrorStatus("해당하는 등급이 없습니다.", 404, LocalDateTime.now())
                 ));
 
-        Evaluation evaluation = evaluationRepository.findByUserAndYear(user, year)
+        Evaluation evaluation = evaluationRepository.findByUserAndYearAndPeriodType(user, year, period)
                         .orElseGet(() -> evaluationRepository.save(Evaluation.builder()
                                 .year(year)
                                 .user(user)
