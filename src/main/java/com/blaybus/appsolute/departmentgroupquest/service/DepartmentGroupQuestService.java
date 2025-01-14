@@ -47,6 +47,7 @@ public class DepartmentGroupQuestService {
     private final MessageService messageService;
 
     public void createOrUpdateXP(UpdateDepartmentGroupQuestRequest request) {
+
         DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName(request.department(), request.departmentGroup())
                 .orElseThrow(() -> new ApplicationException(
                         ErrorStatus.toErrorStatus("해당하는 소속, 그룹이 없습니다.", 404, LocalDateTime.now())
@@ -133,9 +134,7 @@ public class DepartmentGroupQuestService {
 
     public void createOrUpdateDepartQuestDetail(UpdateDepartQuestDetailRequest request) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-M-d");
-
-        DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName(request.departmentName(), request.departmentGroupName())
+        DepartmentGroup departmentGroup = departmentGroupRepository.findByDepartmentNameAndDepartmentGroupName(request.department(), request.departmentGroup())
                         .orElseThrow(() -> new ApplicationException(
                                 ErrorStatus.toErrorStatus("해당하는 직무 그룹이 없습니다.", 404, LocalDateTime.now())
                         ));
@@ -154,15 +153,13 @@ public class DepartmentGroupQuestService {
                     ));
         }
 
-        LocalDate date = LocalDate.parse(request.date(), formatter);
-
         DepartmentQuestDetail departmentQuestDetail = departmentQuestDetailRepository.findByDepartmentGroupQuest(departmentGroupQuest)
                 .stream()
-                .filter(detail -> detail.getDepartmentQuestDetailDate().equals(date))
+                .filter(detail -> detail.getDepartmentQuestDetailDate().equals(request.date()))
                 .findAny()
                 .orElseGet(() -> departmentQuestDetailRepository.save(
                         DepartmentQuestDetail.builder()
-                                .departmentQuestDetailDate(date)
+                                .departmentQuestDetailDate(request.date())
                                 .revenue(request.revenue())
                                 .laborCost(request.laborCost())
                                 .designServiceFee(request.designServiceFee())
@@ -173,7 +170,7 @@ public class DepartmentGroupQuestService {
                                 .build()
                 ));
 
-        departmentQuestDetail.updateAll(date, request.revenue(), request.laborCost(), request.designServiceFee(), request.employeeSalary(), request.retirementBenefit(), request.socialInsuranceBenefit());
+        departmentQuestDetail.updateAll(request.date(), request.revenue(), request.laborCost(), request.designServiceFee(), request.employeeSalary(), request.retirementBenefit(), request.socialInsuranceBenefit());
     }
 
     public ReadDepartmentGroupQuestResponse getDepartmentGroupQuest(Long userId, LocalDateTime date) {
