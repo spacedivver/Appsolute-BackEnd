@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface JpaEvaluationRepository extends JpaRepository<Evaluation, Long> {
-    Optional<Evaluation> findByUserAndYear(User user, Integer year);
+    Optional<Evaluation> findByUserAndYearAndPeriodType(User user, Integer year, PeriodType periodType);
     List<Evaluation> findByUser(User user);
     void deleteByUserAndYearAndPeriodType(User user, Integer year, PeriodType period);
 }
