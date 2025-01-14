@@ -34,7 +34,7 @@ public class DepartmentQuestController {
     })
     @Authenticated
     @GetMapping
-    public ResponseEntity<ReadDepartmentGroupQuestResponse> getDepartmentGroupQuest(HttpServletRequest req, LocalDateTime date) {
+    public ResponseEntity<ReadDepartmentGroupQuestResponse> getDepartmentGroupQuest(HttpServletRequest req, @RequestParam LocalDateTime date) {
         return ResponseEntity.ok(departmentGroupQuestService.getDepartmentGroupQuest(Long.parseLong(req.getAttribute("id").toString()), date));
     }
 
@@ -45,7 +45,7 @@ public class DepartmentQuestController {
             @ApiResponse(responseCode = "500", description = "서버 오류", content = @Content)
     })
     @PostMapping
-    public ResponseEntity<Void> createOrUpdateDepartmentQuest(UpdateDepartmentGroupQuestRequest request) {
+    public ResponseEntity<Void> createOrUpdateDepartmentQuest(@RequestBody UpdateDepartmentGroupQuestRequest request) {
         departmentGroupQuestService.createOrUpdateXP(request);
         return ResponseEntity.ok().build();
     }
