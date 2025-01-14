@@ -57,58 +57,62 @@ public class LeQuestBoardService {
     }
 
     public void updateLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
+        // User 조회
         User user = userRepository.findByEmployeeNumber(leQuestBoardRequest.getEmployeeNumber())
                 .orElseThrow(() -> new ApplicationException(
                         ErrorStatus.toErrorStatus("해당 사용자가 없습니다.", 404, LocalDateTime.now())
                 ));
 
-        LeaderQuest leaderQuest = leaderQuestRepository.findByLeaderQuestName(
-                        leQuestBoardRequest.getLeaderQuestName())
-                .orElseThrow(() -> new ApplicationException(
-                        ErrorStatus.toErrorStatus("해당 퀘스트를 찾을 수 없습니다.", 404, LocalDateTime.now())
-                ));
-
-        LeQuestBoard leQuestBoard = leQuestBoardRepository.findByUserIdAndLeaderQuestId(user.getId(), leaderQuest.getLeaderQuestId())
+        // LeaderQuest 조회 (null 허용)
+        LeaderQuest leaderQuest = leaderQuestRepository.findByLeaderQuestName(leQuestBoardRequest.getLeaderQuestName())
                 .orElse(null);
 
-        if (leQuestBoard == null) {
+        // 기존 데이터 조회
+        List<LeQuestBoard> existingBoards = leQuestBoardRepository.findByUserIdAndMonth(user.getId(), leQuestBoardRequest.getMonth());
+
+        LeQuestBoard leQuestBoard;
+        if (!existingBoards.isEmpty()) {
+            // 기존 데이터가 있으면 첫 번째 요소를 사용
+            leQuestBoard = existingBoards.get(0);
+        } else {
+            // 기존 데이터가 없으면 새로 생성
             leQuestBoard = LeQuestBoard.builder()
                     .userId(user.getId())
-                    .leaderQuestId(leaderQuest.getLeaderQuestId())
+                    .leaderQuestId(leaderQuest != null ? leaderQuest.getLeaderQuestId() : null)
                     .questStatus(LeQuestBoard.QuestStatus.READY)
                     .grantedPoint(0L)
                     .month(leQuestBoardRequest.getMonth())
                     .year(LocalDateTime.now().getYear())
                     .note(leQuestBoardRequest.getNote())
                     .build();
+            leQuestBoardRepository.save(leQuestBoard);
         }
 
+        // 전달받은 값으로 데이터 업데이트
         leQuestBoard.updateGrantedPoint(leQuestBoardRequest.getGrantedPoint());
-        leQuestBoard.updateLeaderQuestId(leQuestBoardRequest.getLeaderQuestId());
-        leQuestBoard.updateQuestStatus(leQuestBoardRequest.getQuestStatus());
+        if (leaderQuest != null) {
+            leQuestBoard.updateLeaderQuestId(leaderQuest.getLeaderQuestId());
+        }
         leQuestBoard.updateNote(leQuestBoardRequest.getNote());
 
-        if(Objects.equals(leQuestBoardRequest.getGrantedPoint(), leaderQuest.getMaxPoint())) {
-            leQuestBoard=LeQuestBoard.builder()
-                    .questStatus(LeQuestBoard.QuestStatus.COMPLETED)
-                    .build();
-        } else if (Objects.equals(leQuestBoardRequest.getGrantedPoint(), leaderQuest.getMediumPoint())) {
-            leQuestBoard=LeQuestBoard.builder()
-                    .questStatus(LeQuestBoard.QuestStatus.ONGOING)
-                    .build();
-        } else {
-            leQuestBoard=LeQuestBoard.builder()
-                    .questStatus(LeQuestBoard.QuestStatus.READY)
-                    .build();
+        // LeaderQuest가 존재하는 경우만 상태 변경
+        if (leaderQuest != null) {
+            if (Objects.equals(leQuestBoardRequest.getGrantedPoint(), leaderQuest.getMaxPoint())) {
+                leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.COMPLETED);
+            } else if (Objects.equals(leQuestBoardRequest.getGrantedPoint(), leaderQuest.getMediumPoint())) {
+                leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.ONGOING);
+            } else {
+                leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.READY);
+            }
         }
 
         String title = "경험치 획득!";
-        String message=leQuestBoard.getMonth()+"월"+leaderQuest.getLeaderQuestName()
-                +"관련 리더부여 퀘스트"+ leQuestBoard.getGrantedPoint() + "경험치를 획득하였습니다.";
+        String message = leaderQuest != null ? leQuestBoard.getMonth() + "월 " + leaderQuest.getLeaderQuestName()
+                + " 관련 리더 퀘스트에서 " + leQuestBoard.getGrantedPoint() + " 경험치를 획득하였습니다."
+                : leQuestBoard.getMonth() + "월 리더 퀘스트에서 " + leQuestBoard.getGrantedPoint() + " 경험치를 획득하였습니다.";
 
-        if(!LeQuestBoard.QuestStatus.READY.equals(leQuestBoard.getQuestStatus())) {
+        if (!LeQuestBoard.QuestStatus.READY.equals(leQuestBoard.getQuestStatus())) {
             List<ReadFcmTokenResponse> tokens = tokenService.getFcmTokens(user.getId());
-
             if (!tokens.isEmpty()) {
                 ReadFcmTokenResponse token = tokens.get(0);
                 messageService.sendMessageTo(user, token.fcmToken(), title, message, null);
@@ -116,7 +120,8 @@ public class LeQuestBoardService {
         }
 
         leQuestBoardRepository.save(leQuestBoard);
-
     }
+
+
 
 }

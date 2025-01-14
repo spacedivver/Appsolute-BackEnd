@@ -1,6 +1,5 @@
 package com.blaybus.appsolute.leaderquest.controller;
 
-import com.blaybus.appsolute.leaderquest.domain.entity.LeQuestBoard;
 import com.blaybus.appsolute.leaderquest.domain.request.LeQuestBoardRequest;
 import com.blaybus.appsolute.leaderquest.domain.response.LeQuestBoardResponse;
 import com.blaybus.appsolute.leaderquest.service.LeQuestBoardService;
@@ -30,7 +29,7 @@ public class LeQuestBoardController {
 
     @Operation(summary = "개인별 리더 퀘스트 현황을 저장")
     @PostMapping("/save")
-    public ResponseEntity<Void> updateLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
+    public ResponseEntity<Void> updateLeQuestBoard(@RequestBody LeQuestBoardRequest leQuestBoardRequest) {
         service.updateLeQuestBoard(leQuestBoardRequest);
         return ResponseEntity.ok().build();
     }

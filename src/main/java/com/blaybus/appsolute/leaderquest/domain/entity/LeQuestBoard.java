@@ -43,16 +43,18 @@ public class LeQuestBoard {
     private int year;
 
     public void updateGrantedPoint(Long grantedPoint) {
-        if (grantedPoint == null || grantedPoint < 0) {
-            throw new IllegalArgumentException("유효하지 않은 경험치 값입니다.");
-        }
-        this.grantedPoint = grantedPoint;
 
-        if (grantedPoint == 0) {
+        if (grantedPoint == null || grantedPoint < 0) {
+            this.grantedPoint = 0L;
+        } else {
+            this.grantedPoint = grantedPoint;
+        }
+
+        if (this.grantedPoint == 0) {
             this.questStatus = QuestStatus.READY;
-        } else if (grantedPoint < 50) {
+        } else if (this.grantedPoint < 50) {
             this.questStatus = QuestStatus.ONGOING;
-        } else if (grantedPoint >= 50) {
+        } else {
             this.questStatus = QuestStatus.COMPLETED;
         }
     }
