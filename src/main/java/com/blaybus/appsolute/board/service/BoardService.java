@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private JpaBoardRepository jpaBoardRepository;
+    private final JpaBoardRepository jpaBoardRepository;
 
     public void saveBoard(BoardRequest boardRequest) {
         Board board=Board.builder()
