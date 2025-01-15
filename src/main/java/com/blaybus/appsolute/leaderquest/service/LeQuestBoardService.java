@@ -36,13 +36,14 @@ public class LeQuestBoardService {
     private final FcmTokenService tokenService;
     private final MessageService messageService;
 
-    public List<LeQuestBoardResponse> getLeQuestBoard(Long userId, Long month) {
-        List<LeQuestBoard> leQuestBoards = leQuestBoardRepository.findByUserIdAndMonth(userId, month);
+    public List<LeQuestBoardResponse> getLeQuestBoard(String userId, Long month) {
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApplicationException(
                         ErrorStatus.toErrorStatus("해당 사용자가 없습니다.", 404, LocalDateTime.now())
                 ));
+
+        List<LeQuestBoard> leQuestBoards = leQuestBoardRepository.findByUserIdAndMonth(user.getId(), month);
 
         return leQuestBoards.stream()
                 .map(leQuestBoard -> LeQuestBoardResponse.builder()
