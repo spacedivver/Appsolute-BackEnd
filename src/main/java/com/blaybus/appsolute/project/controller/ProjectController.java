@@ -21,7 +21,7 @@ public class ProjectController {
 
     @Operation(summary="전사 프로젝트 정보 조회")
     @GetMapping("/user/{userId}")
-    public List<ProjectResponse> getProjectByUser(@PathVariable Long userId) {
+    public List<ProjectResponse> getProjectByUser(@PathVariable String userId) {
         return projectService.getProjectByUser(userId);
     }
 
