@@ -1,7 +1,7 @@
 package com.blaybus.appsolute.leaderquest.controller;
 
-import com.blaybus.appsolute.leaderquest.domain.entity.LeQuestBoard;
 import com.blaybus.appsolute.leaderquest.domain.request.LeQuestBoardRequest;
+import com.blaybus.appsolute.leaderquest.domain.response.LeQuestBoardResponse;
 import com.blaybus.appsolute.leaderquest.service.LeQuestBoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,16 +20,16 @@ public class LeQuestBoardController {
 
     @Operation(summary = "개인별 리더 퀘스트 현황 정보 조회")
     @GetMapping("")
-    public ResponseEntity<List<LeQuestBoard>> getLeQuestBoard(
+    public ResponseEntity<List<LeQuestBoardResponse>> getLeQuestBoard(
             @RequestParam Long userId,
             @RequestParam Long month) {
-        List<LeQuestBoard> result = service.getLeQuestBoard(userId, month);
+        List<LeQuestBoardResponse> result = service.getLeQuestBoard(userId, month);
         return ResponseEntity.ok(result);
     }
 
     @Operation(summary = "개인별 리더 퀘스트 현황을 저장")
     @PostMapping("/save")
-    public ResponseEntity<Void> updateLeQuestBoard(LeQuestBoardRequest leQuestBoardRequest) {
+    public ResponseEntity<Void> updateLeQuestBoard(@RequestBody LeQuestBoardRequest leQuestBoardRequest) {
         service.updateLeQuestBoard(leQuestBoardRequest);
         return ResponseEntity.ok().build();
     }

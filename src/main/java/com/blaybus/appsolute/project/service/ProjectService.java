@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class ProjectService {
 
     private final JpaProjectRepository jpaProjectRepository;
-    private JpaUserRepository userRepository;
+    private final JpaUserRepository userRepository;
     private final FcmTokenService tokenService;
     private final MessageService messageService;
 

@@ -27,7 +27,7 @@ public class ProjectController {
 
     @Operation(summary="전사 프로젝트 정보 저장")
     @PostMapping("/save")
-    public ResponseEntity<Void> updateProject(ProjectRequest projectRequest) {
+    public ResponseEntity<Void> updateProject(@RequestBody ProjectRequest projectRequest) {
         projectService.updateProject(projectRequest);
         return ResponseEntity.ok().build();
     }
