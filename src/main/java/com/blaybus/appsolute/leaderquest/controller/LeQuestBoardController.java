@@ -21,7 +21,7 @@ public class LeQuestBoardController {
     @Operation(summary = "개인별 리더 퀘스트 현황 정보 조회")
     @GetMapping("")
     public ResponseEntity<List<LeQuestBoardResponse>> getLeQuestBoard(
-            @RequestParam Long userId,
+            @RequestParam String userId,
             @RequestParam Long month) {
         List<LeQuestBoardResponse> result = service.getLeQuestBoard(userId, month);
         return ResponseEntity.ok(result);
