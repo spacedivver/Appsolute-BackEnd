@@ -173,7 +173,7 @@ public class DepartmentGroupQuestService {
         departmentQuestDetail.updateAll(request.date(), request.revenue(), request.laborCost(), request.designServiceFee(), request.employeeSalary(), request.retirementBenefit(), request.socialInsuranceBenefit());
     }
 
-    public ReadDepartmentGroupQuestResponse getDepartmentGroupQuest(Long userId, LocalDateTime date) {
+    public ReadDepartmentGroupQuestResponse getDepartmentGroupQuest(Long userId, LocalDate date) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApplicationException(
@@ -185,6 +185,12 @@ public class DepartmentGroupQuestService {
         int year = date.getYear();
 
         List<DepartmentGroupQuest> departmentGroupQuestList = departmentGroupQuestRepository.findByDepartmentGroupAndYear(departmentGroup, year);
+
+        if(departmentGroupQuestList.isEmpty()) {
+            throw new ApplicationException(
+                    ErrorStatus.toErrorStatus("해당하는 직무 그룹 퀘스트가 없습니다.", 404, LocalDateTime.now())
+            );
+        }
 
         QuestType questType = departmentGroupQuestList.getFirst().getDepartmentQuestType();
 

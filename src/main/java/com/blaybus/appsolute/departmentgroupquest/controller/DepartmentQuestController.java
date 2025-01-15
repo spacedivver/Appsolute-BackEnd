@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
@@ -35,7 +36,7 @@ public class DepartmentQuestController {
     })
     @Authenticated
     @GetMapping
-    public ResponseEntity<ReadDepartmentGroupQuestResponse> getDepartmentGroupQuest(HttpServletRequest req, @RequestParam LocalDateTime date) {
+    public ResponseEntity<ReadDepartmentGroupQuestResponse> getDepartmentGroupQuest(HttpServletRequest req, @RequestParam LocalDate date) {
         return ResponseEntity.ok(departmentGroupQuestService.getDepartmentGroupQuest(Long.parseLong(req.getAttribute("id").toString()), date));
     }
 
