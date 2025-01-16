@@ -26,7 +26,7 @@ public class LeQuestBoard {
     private Long month;
 
     public enum QuestStatus {
-        READY, ONGOING, COMPLETED, FAILED
+        Max, Med, Min
     }
 
     @Column(name = "status")
@@ -51,11 +51,11 @@ public class LeQuestBoard {
         }
 
         if (this.grantedPoint == 0) {
-            this.questStatus = QuestStatus.READY;
-        } else if (this.grantedPoint < 50) {
-            this.questStatus = QuestStatus.ONGOING;
+            this.questStatus = QuestStatus.Min;
+        } else if (this.grantedPoint <= 50) {
+            this.questStatus = QuestStatus.Med;
         } else {
-            this.questStatus = QuestStatus.COMPLETED;
+            this.questStatus = QuestStatus.Max;
         }
     }
 
@@ -64,7 +64,11 @@ public class LeQuestBoard {
     }
 
     public void updateQuestStatus(QuestStatus questStatus) {
-        this.questStatus = questStatus;
+        if (questStatus == null || questStatus.toString().trim().isEmpty()) {
+            this.questStatus = LeQuestBoard.QuestStatus.Min;
+        } else {
+            this.questStatus = questStatus;
+        }
     }
 
     public void updateNote(String note) {

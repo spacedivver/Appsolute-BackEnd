@@ -48,7 +48,6 @@ public class LeQuestBoardService {
         // 결과 리스트 생성
         List<LeQuestBoardResponse> responseList = new ArrayList<>();
 
-        // for문을 사용하여 리스트를 순회
         if (leQuestBoards.isPresent()) {
             LeQuestBoard leQuestBoard = leQuestBoards.get();
             LeaderQuest leaderQuest = jpaLeaderQuestRepository.findByLeaderQuestId(leQuestBoard.getLeaderQuestId());
@@ -97,7 +96,7 @@ public class LeQuestBoardService {
                     LeQuestBoard newLeQuestBoard = LeQuestBoard.builder()
                             .userId(user.getId())
                             .leaderQuestId(0L)
-                            .questStatus(LeQuestBoard.QuestStatus.READY)
+                            .questStatus(LeQuestBoard.QuestStatus.Min)
                             .grantedPoint(0L)
                             .month(leQuestBoardRequest.getMonth())
                             .year(LocalDateTime.now().getYear())
@@ -126,11 +125,11 @@ public class LeQuestBoardService {
 
     private void updateQuestStatus(LeaderQuest leaderQuest, LeQuestBoard leQuestBoard, Long grantedPoint) {
         if (Objects.equals(grantedPoint, leaderQuest.getMaxPoint())) {
-            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.COMPLETED);
+            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.Max);
         } else if (Objects.equals(grantedPoint, leaderQuest.getMediumPoint())) {
-            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.ONGOING);
+            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.Med);
         } else {
-            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.READY);
+            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.Min);
         }
     }
 
@@ -140,7 +139,7 @@ public class LeQuestBoardService {
                 ? leQuestBoard.getMonth() + "월 " + leaderQuest.getLeaderQuestName() + "에서 " + leQuestBoard.getGrantedPoint() + " 경험치를 획득하였습니다."
                 : leQuestBoard.getMonth() + "월 리더 퀘스트에서 " + leQuestBoard.getGrantedPoint() + " 경험치를 획득하였습니다.";
 
-        if (leQuestBoard.getQuestStatus() != LeQuestBoard.QuestStatus.READY) {
+        if (leQuestBoard.getQuestStatus() != LeQuestBoard.QuestStatus.Min) {
             List<ReadFcmTokenResponse> tokens = tokenService.getFcmTokens(user.getId());
             tokens.forEach(token -> messageService.sendMessageTo(user, token.fcmToken(), title, message, null));
         }

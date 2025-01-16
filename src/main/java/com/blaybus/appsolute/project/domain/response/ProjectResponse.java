@@ -6,8 +6,8 @@ import lombok.Data;
 @Data
 public class ProjectResponse {
     private Long projectId;
-    private Integer month;
-    private Integer day;
+    private int month;
+    private int day;
     private String projectName;
     private Long grantedPoint;
     private String note;
