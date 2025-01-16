@@ -4,12 +4,14 @@ import com.blaybus.appsolute.commons.exception.ApplicationException;
 import com.blaybus.appsolute.commons.exception.payload.ErrorStatus;
 import com.blaybus.appsolute.evaluation.domain.entity.EvaluationGrade;
 import com.blaybus.appsolute.evaluation.domain.request.UpdateGradeRequest;
+import com.blaybus.appsolute.evaluation.domain.response.ReadGradeResponse;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationGradeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +27,9 @@ public class EvaluationGradeService {
                 ));
 
         evaluationGrade.updatePoint(request.gradePoint());
+    }
+
+    public List<ReadGradeResponse> getAllGrades() {
+        return evaluationGradeRepository.findAll().stream().map(ReadGradeResponse::fromEntity).toList();
     }
 }

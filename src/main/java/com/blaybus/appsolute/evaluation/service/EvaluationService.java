@@ -6,6 +6,8 @@ import com.blaybus.appsolute.evaluation.domain.entity.Evaluation;
 import com.blaybus.appsolute.evaluation.domain.entity.EvaluationGrade;
 import com.blaybus.appsolute.evaluation.domain.request.CreateEvaluationRequest;
 import com.blaybus.appsolute.evaluation.domain.request.DeleteEvaluationRequest;
+import com.blaybus.appsolute.evaluation.domain.request.ReadEvaluationRequest;
+import com.blaybus.appsolute.evaluation.domain.response.ReadEvaluationResponse;
 import com.blaybus.appsolute.evaluation.domain.type.GradeType;
 import com.blaybus.appsolute.evaluation.domain.type.PeriodType;
 import com.blaybus.appsolute.evaluation.repository.JpaEvaluationGradeRepository;
@@ -84,5 +86,20 @@ public class EvaluationService {
                         ));
 
         evaluationRepository.deleteByUserAndYearAndPeriodType(user, LocalDateTime.now().getYear(), request.period());
+    }
+
+    public ReadEvaluationResponse getEvaluation(Long userId, ReadEvaluationRequest request) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ApplicationException(
+                        ErrorStatus.toErrorStatus("해당하는 사용자가 없습니다.", 404, LocalDateTime.now())
+                ));
+
+        Evaluation evaluation = evaluationRepository.findByUserAndYearAndPeriodType(user, request.year(), request.periodType())
+                .orElseThrow(() -> new ApplicationException(
+                        ErrorStatus.toErrorStatus("해당하는 유저의 인사평가가 없습니다.", 404, LocalDateTime.now())
+                ));
+
+        return ReadEvaluationResponse.fromEvaluationGrade(evaluation.getEvaluationGrade());
     }
 }
