@@ -37,6 +37,7 @@ public class LevelService {
 
         Level level = jpaLevelRepository.findByLevelName(request.levelName())
                         .orElseGet(() -> jpaLevelRepository.save(request.toEntity(maxPoint)));
+        level.updateAchievePoint(request.levelAchievement());
 
         if(nextLevel != null) {
             level.updateNextLevel(nextLevel);

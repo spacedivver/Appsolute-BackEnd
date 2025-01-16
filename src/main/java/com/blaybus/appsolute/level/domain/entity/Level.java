@@ -38,6 +38,10 @@ public class Level {
         this.nextLevel = nextLevel;
     }
 
+    public void updateAchievePoint(Long achievePoint) {
+        this.levelAchievement = achievePoint;
+    }
+
     @Builder
     public Level(Long levelId, String levelName, Long levelAchievement, Long maxPoint, Level nextLevel) {
         this.levelId = levelId;
