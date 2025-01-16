@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface JpaLeQuestBoardRepository extends JpaRepository<LeQuestBoard, Long> {
-    List<LeQuestBoard> findByUserIdAndMonth(Long userId, Long month);
+    Optional<LeQuestBoard> findByUserIdAndMonth(Long userId, Long month);
     Optional<LeQuestBoard> findByUserIdAndLeaderQuestId(Long userId, Long leaderQuestId);
     List<LeQuestBoard> findByUserId(Long userId);
 }

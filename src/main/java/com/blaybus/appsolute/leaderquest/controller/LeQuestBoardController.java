@@ -3,6 +3,7 @@ package com.blaybus.appsolute.leaderquest.controller;
 import com.blaybus.appsolute.leaderquest.domain.request.LeQuestBoardRequest;
 import com.blaybus.appsolute.leaderquest.domain.response.LeQuestBoardResponse;
 import com.blaybus.appsolute.leaderquest.service.LeQuestBoardService;
+import com.blaybus.appsolute.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
