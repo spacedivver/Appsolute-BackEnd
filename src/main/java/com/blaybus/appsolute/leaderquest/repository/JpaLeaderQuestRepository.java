@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface JpaLeaderQuestRepository extends JpaRepository<LeaderQuest, Long> {
     Optional<LeaderQuest> findByLeaderQuestName(String leaderQuestName);
-    Optional<LeaderQuest> findByLeaderQuestId(Long leaderQuestId);
+    LeaderQuest findByLeaderQuestId(Long leaderQuestId);
 }
