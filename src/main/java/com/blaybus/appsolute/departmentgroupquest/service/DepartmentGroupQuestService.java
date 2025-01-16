@@ -155,11 +155,11 @@ public class DepartmentGroupQuestService {
 
         DepartmentQuestDetail departmentQuestDetail = departmentQuestDetailRepository.findByDepartmentGroupQuest(departmentGroupQuest)
                 .stream()
-                .filter(detail -> detail.getDepartmentQuestDetailDate().equals(request.date()))
+                .filter(detail -> detail.getDepartmentQuestDetailDate().equals(request.date().plusDays(1)))
                 .findAny()
                 .orElseGet(() -> departmentQuestDetailRepository.save(
                         DepartmentQuestDetail.builder()
-                                .departmentQuestDetailDate(request.date())
+                                .departmentQuestDetailDate(request.date().plusDays(1))
                                 .revenue(request.revenue())
                                 .laborCost(request.laborCost())
                                 .designServiceFee(request.designServiceFee())
