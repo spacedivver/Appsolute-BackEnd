@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ public class BoardService {
         List<Board> boards = jpaBoardRepository.findAll();
 
         return boards.stream()
+                .sorted(Comparator.comparing(Board::getCreatedAt).reversed()) // created_at 기준 내림차순 정렬
                 .map(BoardResponse::fromEntity)
                 .collect(Collectors.toList());
     }
