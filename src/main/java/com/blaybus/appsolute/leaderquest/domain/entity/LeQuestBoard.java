@@ -64,11 +64,7 @@ public class LeQuestBoard {
     }
 
     public void updateQuestStatus(QuestStatus questStatus) {
-        if (questStatus == null || questStatus.toString().trim().isEmpty()) {
-            this.questStatus = LeQuestBoard.QuestStatus.Min;
-        } else {
-            this.questStatus = questStatus;
-        }
+        this.questStatus = questStatus;
     }
 
     public void updateNote(String note) {
