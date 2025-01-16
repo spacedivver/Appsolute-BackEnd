@@ -14,5 +14,8 @@ public class LeQuestBoardResponse {
     private Long grantedPoint;
     private String note;
     private int year;
+    private String maxThreshold;
+    private String mediumThreshold;
+    private String questName;
 
 }

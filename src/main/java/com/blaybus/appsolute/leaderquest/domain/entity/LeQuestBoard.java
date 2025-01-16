@@ -16,10 +16,14 @@ public class LeQuestBoard {
     @Column(name = "le_board_id")
     private Long leBoardId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leader_quest_id", referencedColumnName = "leader_quest_id")
+    private LeaderQuest leaderQuest;
+
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "leader_quest_id")
+    @Column(name = "leader_quest_id", insertable = false, updatable = false)
     private Long leaderQuestId;
 
     @Column(name="month")
