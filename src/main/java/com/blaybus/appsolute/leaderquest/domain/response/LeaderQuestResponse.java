@@ -1,5 +1,6 @@
 package com.blaybus.appsolute.leaderquest.domain.response;
 
+import com.blaybus.appsolute.leaderquest.domain.entity.LeQuestBoard;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ public class LeaderQuestResponse {
     private String leaderQuestType;
     private String maxThreshold;
     private String mediumThreshold;
-    private String questStatus;
+    private LeQuestBoard.QuestStatus questStatus;
     private String grantedPoint;
     private long mediumPoint;
     private long maxPoint;
