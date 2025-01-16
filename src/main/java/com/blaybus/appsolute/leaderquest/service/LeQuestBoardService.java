@@ -37,9 +37,9 @@ public class LeQuestBoardService {
     private final FcmTokenService tokenService;
     private final MessageService messageService;
 
-    public List<LeQuestBoardResponse> getLeQuestBoard(String userId, Long month) {
+    public List<LeQuestBoardResponse> getLeQuestBoard(Long userId, Long month) {
 
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ApplicationException(
                         ErrorStatus.toErrorStatus("해당 사용자가 없습니다.", 404, LocalDateTime.now())
                 ));

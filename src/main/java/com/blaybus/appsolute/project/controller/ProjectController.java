@@ -1,10 +1,12 @@
 package com.blaybus.appsolute.project.controller;
 
+import com.blaybus.appsolute.commons.annotation.Authenticated;
 import com.blaybus.appsolute.project.domain.request.ProjectRequest;
 import com.blaybus.appsolute.project.domain.response.ProjectResponse;
 import com.blaybus.appsolute.project.service.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,11 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @Operation(summary="전사 프로젝트 정보 조회")
+    @Authenticated
     @GetMapping("/user/{userId}")
-    public List<ProjectResponse> getProjectByUser(@PathVariable String userId) {
-        return projectService.getProjectByUser(userId);
+    public List<ProjectResponse> getProjectByUser(HttpServletRequest req) {
+
+        return projectService.getProjectByUser(Long.parseLong(req.getAttribute("id").toString()));
     }
 
     @Operation(summary="전사 프로젝트 정보 저장")
