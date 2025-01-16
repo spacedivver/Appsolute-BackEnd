@@ -30,8 +30,7 @@ public class LeQuestBoard {
     }
 
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private QuestStatus questStatus;
+    private String questStatus;
 
     @Column(name = "granted_point")
     private Long grantedPoint;
@@ -51,11 +50,11 @@ public class LeQuestBoard {
         }
 
         if (this.grantedPoint == 0) {
-            this.questStatus = QuestStatus.READY;
-        } else if (this.grantedPoint < 50) {
-            this.questStatus = QuestStatus.ONGOING;
+            this.questStatus = "";
+        } else if (this.grantedPoint <= 50) {
+            this.questStatus = "Med";
         } else {
-            this.questStatus = QuestStatus.COMPLETED;
+            this.questStatus = "Max";
         }
     }
 
@@ -63,7 +62,7 @@ public class LeQuestBoard {
         this.leaderQuestId = leaderQuestId;
     }
 
-    public void updateQuestStatus(QuestStatus questStatus) {
+    public void updateQuestStatus(String questStatus) {
         this.questStatus = questStatus;
     }
 
