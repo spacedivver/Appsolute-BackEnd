@@ -12,7 +12,8 @@ public record ReadDepartmentGroupQuestResponse(
         Double maxThreshold,
         Double mediumThreshold,
         QuestStatusType departmentGroupQuestStatus,
-        Long mediumPoint, Long maxPoint,
+        Long mediumPoint,
+        Long maxPoint,
         Integer year,
         Integer month,
         Integer week,
@@ -28,8 +29,12 @@ public record ReadDepartmentGroupQuestResponse(
                 .departmentQuestType(departmentGroupQuest.getDepartmentQuestType())
                 .maxThreshold(departmentGroupQuest.getMaxThreshold())
                 .mediumThreshold(departmentGroupQuest.getMediumThreshold())
+                .departmentGroupQuestStatus(departmentGroupQuest.getDepartmentGroupQuestStatus())
                 .maxPoint(departmentGroupQuest.getMaxPoint())
                 .mediumPoint(departmentGroupQuest.getMediumPoint())
+                .year(departmentGroupQuest.getYear())
+                .month(departmentGroupQuest.getMonth())
+                .week(departmentGroupQuest.getWeek())
                 .nowXP(departmentGroupQuest.getNowXP())
                 .departmentName(departmentGroupQuest.getDepartmentGroup().getDepartmentGroupName())
                 .departmentGroupName(departmentGroupQuest.getDepartmentGroup().getDepartmentGroupName())
