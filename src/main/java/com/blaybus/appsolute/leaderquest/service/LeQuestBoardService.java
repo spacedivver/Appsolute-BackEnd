@@ -96,7 +96,7 @@ public class LeQuestBoardService {
                     LeQuestBoard newLeQuestBoard = LeQuestBoard.builder()
                             .userId(user.getId())
                             .leaderQuestId(0L)
-                            .questStatus("")
+                            .questStatus(LeQuestBoard.QuestStatus.Min)
                             .grantedPoint(0L)
                             .month(leQuestBoardRequest.getMonth())
                             .year(LocalDateTime.now().getYear())
@@ -125,11 +125,11 @@ public class LeQuestBoardService {
 
     private void updateQuestStatus(LeaderQuest leaderQuest, LeQuestBoard leQuestBoard, Long grantedPoint) {
         if (Objects.equals(grantedPoint, leaderQuest.getMaxPoint())) {
-            leQuestBoard.updateQuestStatus("Max");
+            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.Max);
         } else if (Objects.equals(grantedPoint, leaderQuest.getMediumPoint())) {
-            leQuestBoard.updateQuestStatus("Med");
+            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.Med);
         } else {
-            leQuestBoard.updateQuestStatus("");
+            leQuestBoard.updateQuestStatus(LeQuestBoard.QuestStatus.Min);
         }
     }
 
@@ -139,7 +139,7 @@ public class LeQuestBoardService {
                 ? leQuestBoard.getMonth() + "월 " + leaderQuest.getLeaderQuestName() + "에서 " + leQuestBoard.getGrantedPoint() + " 경험치를 획득하였습니다."
                 : leQuestBoard.getMonth() + "월 리더 퀘스트에서 " + leQuestBoard.getGrantedPoint() + " 경험치를 획득하였습니다.";
 
-        if (!Objects.equals(leQuestBoard.getQuestStatus(), "")) {
+        if (leQuestBoard.getQuestStatus() != LeQuestBoard.QuestStatus.Min) {
             List<ReadFcmTokenResponse> tokens = tokenService.getFcmTokens(user.getId());
             tokens.forEach(token -> messageService.sendMessageTo(user, token.fcmToken(), title, message, null));
         }

@@ -10,7 +10,7 @@ public class LeQuestBoardResponse {
 
     private String employeeName;
     private Long month;
-    private String questStatus;
+    private LeQuestBoard.QuestStatus questStatus;
     private Long grantedPoint;
     private String note;
     private int year;

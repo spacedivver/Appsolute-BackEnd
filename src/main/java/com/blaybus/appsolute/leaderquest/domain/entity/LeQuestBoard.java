@@ -26,11 +26,12 @@ public class LeQuestBoard {
     private Long month;
 
     public enum QuestStatus {
-        READY, ONGOING, COMPLETED, FAILED
+        Max, Med, Min
     }
 
     @Column(name = "status")
-    private String questStatus;
+    @Enumerated(EnumType.STRING)
+    private QuestStatus questStatus;
 
     @Column(name = "granted_point")
     private Long grantedPoint;
@@ -50,11 +51,11 @@ public class LeQuestBoard {
         }
 
         if (this.grantedPoint == 0) {
-            this.questStatus = "";
+            this.questStatus = QuestStatus.Min;
         } else if (this.grantedPoint <= 50) {
-            this.questStatus = "Med";
+            this.questStatus = QuestStatus.Med;
         } else {
-            this.questStatus = "Max";
+            this.questStatus = QuestStatus.Max;
         }
     }
 
@@ -62,8 +63,12 @@ public class LeQuestBoard {
         this.leaderQuestId = leaderQuestId;
     }
 
-    public void updateQuestStatus(String questStatus) {
-        this.questStatus = questStatus;
+    public void updateQuestStatus(QuestStatus questStatus) {
+        if (questStatus == null || questStatus.toString().trim().isEmpty()) {
+            this.questStatus = LeQuestBoard.QuestStatus.Min;
+        } else {
+            this.questStatus = questStatus;
+        }
     }
 
     public void updateNote(String note) {
