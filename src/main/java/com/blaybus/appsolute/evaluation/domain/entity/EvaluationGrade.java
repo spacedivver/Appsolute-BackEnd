@@ -3,6 +3,7 @@ package com.blaybus.appsolute.evaluation.domain.entity;
 import com.blaybus.appsolute.evaluation.domain.type.GradeType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,4 +24,15 @@ public class EvaluationGrade {
 
     @Column(name = "evaluation_grade_point")
     private Long evaluationGradePoint;
+
+    public void updatePoint(Long point) {
+        this.evaluationGradePoint = point;
+    }
+
+    @Builder
+    public EvaluationGrade(Long evaluationGradeId, GradeType evaluationGradeName, Long evaluationGradePoint) {
+        this.evaluationGradeId = evaluationGradeId;
+        this.evaluationGradeName = evaluationGradeName;
+        this.evaluationGradePoint = evaluationGradePoint;
+    }
 }
