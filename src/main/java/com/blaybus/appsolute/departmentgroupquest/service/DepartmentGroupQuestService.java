@@ -22,6 +22,7 @@ import com.blaybus.appsolute.user.domain.entity.User;
 import com.blaybus.appsolute.user.repository.JpaUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class DepartmentGroupQuestService {
 
     private final JpaDepartmentGroupQuestRepository departmentGroupQuestRepository;
@@ -153,6 +155,8 @@ public class DepartmentGroupQuestService {
                     ));
         }
 
+        log.info("{}",request.date().plusDays(1));
+
         DepartmentQuestDetail departmentQuestDetail = departmentQuestDetailRepository.findByDepartmentGroupQuest(departmentGroupQuest)
                 .stream()
                 .filter(detail -> detail.getDepartmentQuestDetailDate().equals(request.date().plusDays(1)))
@@ -170,7 +174,7 @@ public class DepartmentGroupQuestService {
                                 .build()
                 ));
 
-        departmentQuestDetail.updateAll(request.date(), request.revenue(), request.laborCost(), request.designServiceFee(), request.employeeSalary(), request.retirementBenefit(), request.socialInsuranceBenefit());
+        departmentQuestDetail.updateAll(request.date().plusDays(1), request.revenue(), request.laborCost(), request.designServiceFee(), request.employeeSalary(), request.retirementBenefit(), request.socialInsuranceBenefit());
     }
 
     public ReadDepartmentGroupQuestResponse getDepartmentGroupQuest(Long userId, LocalDate date) {
