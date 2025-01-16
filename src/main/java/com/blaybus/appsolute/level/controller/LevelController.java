@@ -1,6 +1,7 @@
 package com.blaybus.appsolute.level.controller;
 
 import com.blaybus.appsolute.level.domain.request.CreateLevelRequest;
+import com.blaybus.appsolute.level.domain.request.DeleteLevelRequest;
 import com.blaybus.appsolute.level.domain.response.ReadLevelResponse;
 import com.blaybus.appsolute.level.service.LevelService;
 import com.blaybus.appsolute.user.domain.request.UpdateLevelRequest;
@@ -25,6 +26,12 @@ public class LevelController {
     @PostMapping
     public ResponseEntity<Void> createLevel(@RequestBody CreateLevelRequest request) {
         levelService.createLevel(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteLevel(@RequestBody DeleteLevelRequest request) {
+        levelService.deleteLevel(request);
         return ResponseEntity.noContent().build();
     }
 }

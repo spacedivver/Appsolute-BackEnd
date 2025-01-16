@@ -5,14 +5,14 @@ import com.blaybus.appsolute.level.domain.entity.Level;
 public record CreateLevelRequest(
         String previousLevel,
         String levelName,
-        Long levelAchievement,
-        Long maxPoint
+        String nextLevel,
+        Long levelAchievement
 ) {
-    public Level toEntity() {
+    public Level toEntity(Long maxPoint) {
         return Level.builder()
                 .levelAchievement(levelAchievement)
                 .levelName(levelName)
-                .maxPoint(maxPoint != null ? maxPoint : Long.MAX_VALUE)
+                .maxPoint(maxPoint)
                 .build();
     }
 }
