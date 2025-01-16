@@ -341,6 +341,8 @@ public class UserService {
         for(User user : userList) {
             List<Evaluation> evaluationList = evaluationRepository.findByUser(user);
             List<DepartmentGroupQuest> departmentGroupQuestList = departmentGroupQuestRepository.findByDepartmentGroup(user.getDepartmentGroup());
+            List<Project> projectList = jpaProjectRepository.findByUserId(user.getId());
+            List<LeQuestBoard> leQuestBoardList = jpaLeQuestBoardRepository.findByUserId(user.getId());
 
             long lastYearXpPoint = 0;
 
@@ -352,6 +354,13 @@ public class UserService {
                     .filter(xp -> xp.getYear() == now.getYear() -1)
                     .toList();
 
+            List<Project> lastProjectList = projectList.stream()
+                    .filter(project -> project.getYear() == now.getYear() -1)
+                    .toList();
+
+            List<LeQuestBoard> lastLeQuestList = leQuestBoardList.stream()
+                    .filter(leQuestBoard -> leQuestBoard.getYear() == now.getYear() -1)
+                    .toList();
 
             for(Evaluation lastEvaluation : lastYearEvaluation) {
                 lastYearXpPoint += lastEvaluation.getEvaluationGrade().getEvaluationGradePoint();
@@ -363,6 +372,14 @@ public class UserService {
                 } else if (thisDepartmentGroupQuest.getDepartmentGroupQuestStatus() == QuestStatusType.COMPLETED) {
                     lastYearXpPoint += thisDepartmentGroupQuest.getMaxPoint();
                 }
+            }
+
+            for(Project lastProject : lastProjectList) {
+                lastYearXpPoint += lastProject.getGrantedPoint();
+            }
+
+            for(LeQuestBoard lastLeQuestBoard : lastLeQuestList) {
+                lastYearXpPoint += lastLeQuestBoard.getGrantedPoint();
             }
 
             Xp xp = Xp.builder()
