@@ -31,9 +31,9 @@ public class ProjectService {
     private final FcmTokenService tokenService;
     private final MessageService messageService;
 
-    public List<ProjectResponse> getProjectByUser(Long userId) {
+    public List<ProjectResponse> getProjectByUser(String userId) {
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApplicationException(
                         ErrorStatus.toErrorStatus("해당 사용자가 없습니다.", 404, LocalDateTime.now())
                 ));

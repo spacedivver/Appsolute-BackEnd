@@ -5,9 +5,10 @@ import lombok.Data;
 @Data
 public class ProjectRequest {
 
-    private Integer month;
-    private Integer day;
+    private int month;
+    private int day;
     private String employeeNumber;
+    private String targetParson;
     private String projectName;
     private Long grantedPoint;
     private String note;
