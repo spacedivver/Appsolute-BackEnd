@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,14 +47,20 @@ public class LeQuestBoardService {
         List<LeQuestBoard> leQuestBoards = leQuestBoardRepository.findByUserIdAndMonth(user.getId(), month);
 
         return leQuestBoards.stream()
-                .map(leQuestBoard -> LeQuestBoardResponse.builder()
-                        .employeeName(user.getUserName())
-                        .month(leQuestBoard.getMonth())
-                        .questStatus(leQuestBoard.getQuestStatus())
-                        .grantedPoint(leQuestBoard.getGrantedPoint())
-                        .note(leQuestBoard.getNote())
-                        .year(leQuestBoard.getYear())
-                        .build())
+                .map(leQuestBoard -> {
+                    LeaderQuest leaderQuest = leQuestBoard.getLeaderQuest();
+                    return LeQuestBoardResponse.builder()
+                            .employeeName(user.getUserName())
+                            .month(leQuestBoard.getMonth())
+                            .questStatus(leQuestBoard.getQuestStatus())
+                            .grantedPoint(leQuestBoard.getGrantedPoint())
+                            .note(leQuestBoard.getNote())
+                            .year(leQuestBoard.getYear())
+                            .questName(leaderQuest.getLeaderQuestName())
+                            .maxThreshold(leaderQuest.getMaxThreshold())
+                            .mediumThreshold(leaderQuest.getMediumThreshold())
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
