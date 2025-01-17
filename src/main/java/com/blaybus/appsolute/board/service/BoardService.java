@@ -31,7 +31,7 @@ public class BoardService {
         List<Board> boards = jpaBoardRepository.findAll();
 
         return boards.stream()
-                .sorted(Comparator.comparing(Board::getCreatedAt).reversed()) // created_at 기준 내림차순 정렬
+                .sorted(Comparator.comparing(Board::getCreatedAt).reversed())
                 .map(BoardResponse::fromEntity)
                 .collect(Collectors.toList());
     }
