@@ -10,10 +10,6 @@ Google sheets, Google apps script
 Github actions
 
 
-## 시스템 구조도
-
-![image 9](https://github.com/user-attachments/assets/c16964f7-c9f7-457d-8d0d-bfec6daebfce)
-
 
 ## ⛏️ 주요 기능
 
